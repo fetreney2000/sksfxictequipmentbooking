@@ -80,36 +80,11 @@ export function PublicWizardPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className="relative mb-6">
-        <div className="text-center">
-          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Permohonan Pinjaman Peralatan ICT</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Sila lengkapkan maklumat berikut untuk membuat permohonan pinjaman.
-          </p>
-        </div>
-        <div className="absolute top-0 right-0">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <RotateCcw className="size-4" />
-                Mula Semula
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Mula Semula Borang?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Semua maklumat yang telah anda isi akan dibuang dan borang akan
-                  dikembalikan ke langkah pertama.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={() => reset()}>Ya, Mula Semula</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+      <div className="mb-6 text-center">
+        <h1 className="text-xl font-bold text-foreground sm:text-2xl">Permohonan Pinjaman Peralatan ICT</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Sila lengkapkan maklumat berikut untuk membuat permohonan pinjaman.
+        </p>
       </div>
 
       {/* Step indicator */}
@@ -167,15 +142,38 @@ export function PublicWizardPage() {
         {step === 3 && <Step3Butiran />}
         {step === 4 && <Step4Semakan />}
 
-        <div className="mt-6 flex items-center justify-between gap-3 border-t pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setStep(Math.max(1, step - 1))}
-            disabled={step === 1}
-          >
-            Kembali
-          </Button>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setStep(Math.max(1, step - 1))}
+              disabled={step === 1}
+            >
+              Kembali
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button type="button" variant="ghost" className="text-muted-foreground hover:text-destructive">
+                  <RotateCcw className="size-4" />
+                  Mula Semula
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Mula Semula Borang?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Semua maklumat yang telah anda isi akan dibuang dan borang akan
+                    dikembalikan ke langkah pertama.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => reset()}>Ya, Mula Semula</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           {step < 4 ? (
             <Button type="button" onClick={() => setStep(step + 1)} disabled={!canProceed}>
               Seterusnya

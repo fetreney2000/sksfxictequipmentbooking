@@ -9,6 +9,7 @@ import {
   UserCircle,
   LogOut,
   MonitorSmartphone,
+  Package,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -25,6 +26,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: '/admin', label: 'Papan Pemuka', icon: <LayoutDashboard className="size-5" /> },
   { to: '/admin/permohonan', label: 'Permohonan', icon: <ClipboardList className="size-5" /> },
+  { to: '/admin/peralatan', label: 'Peralatan', icon: <Package className="size-5" />, adminOnly: true },
   { to: '/admin/laporan', label: 'Laporan', icon: <BarChart3 className="size-5" /> },
   { to: '/admin/guru', label: 'Guru', icon: <Users className="size-5" />, adminOnly: true },
   { to: '/admin/pengguna', label: 'Pengguna', icon: <UserCog className="size-5" />, adminOnly: true },

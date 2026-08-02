@@ -72,9 +72,13 @@ building the app where the build prompt was ambiguous. Review before production 
 
 12. **Permission matrix** (implemented exactly as Section 7.2): penyelia can view
     dashboard, laporan (view + export), and permohonan (view only), plus their
-    own profil. Approve/reject/return/delete/edit, guru management, and user
-    management are admin-only. `/admin/guru` and `/admin/pengguna` are guarded by
-    a `RequireRole` wrapper.
+    own profil. Approve/reject/return/delete/edit, guru management, user
+    management, and the **Peralatan ICT inventory page** (`/admin/peralatan`)
+    are admin-only. `/admin/guru`, `/admin/pengguna`, and `/admin/peralatan` are
+    guarded by a `RequireRole` wrapper. The Peralatan page covers kategori,
+    jenama, nombor siri, pendaftaran baharu, and pelupusan; the `dipinjam`
+    status cannot be set manually (it is driven by approvals/returns), and
+    disposal is disabled while an item is borrowed.
 
 13. **Kemaskini (edit) scope.** The "Kemaskini" action on a permohonan only
     edits `tarikh_pemulangan_dijangka`, `tujuan_id`, and `tujuan_lain_teks`.

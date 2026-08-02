@@ -9,6 +9,7 @@ import { DashboardPage } from '@/features/admin-dashboard/DashboardPage'
 import { PermohonanPage } from '@/features/admin-permohonan/PermohonanPage'
 import { PermohonanDetailPage } from '@/features/admin-permohonan/PermohonanDetailPage'
 import { LaporanPage } from '@/features/admin-laporan/LaporanPage'
+import { PeralatanPage } from '@/features/admin-peralatan/PeralatanPage'
 import { GuruPage } from '@/features/admin-guru/GuruPage'
 import { PenggunaPage } from '@/features/admin-pengguna/PenggunaPage'
 import { ProfilPage } from '@/features/admin-profil/ProfilPage'
@@ -36,6 +37,14 @@ function App() {
         <Route path="permohonan" element={<PermohonanPage />} />
         <Route path="permohonan/:id" element={<PermohonanDetailPage />} />
         <Route path="laporan" element={<LaporanPage />} />
+        <Route
+          path="peralatan"
+          element={
+            <RequireRole role="admin">
+              <PeralatanPage />
+            </RequireRole>
+          }
+        />
         <Route
           path="guru"
           element={
