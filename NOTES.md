@@ -60,6 +60,13 @@ building the app where the build prompt was ambiguous. Review before production 
    `dibatalkan` reverts equipment to `tersedia`. These are implemented as
    **sequential updates with error handling** in the client (no RPC), per the
    prompt's allowance. Deleting a request also reverts any `dipinjam` equipment.
+   The approval flow supports **partial approval and replacement**: the admin
+   can deselect requested items or substitute alternative equipment (another
+   brand/serial number); deselected items are removed from the request,
+   replacements are added, and only the final set is marked `dipinjam`.
+   "Tandai Belum Selesai" reverses an erroneous `selesai` back to `diluluskan`
+   (clearing the actual return date and reverting its equipment to `dipinjam`,
+   skipping equipment that has since been loaned out again).
 
 10. **Equipment status for a rejected request.** Rejected requests never changed
     equipment status (equipment is only marked `dipinjam` on approval), so
@@ -92,6 +99,12 @@ building the app where the build prompt was ambiguous. Review before production 
     (Kuala Lumpur). The Dashboard shows all defaulters; the Laporan page shows
     defaulters whose expected return date falls within the selected report
     range. "Lewat N hari" is calendar days overdue (`daysBetweenKL`).
+
+16. **Branding.** The app title is "Sistem Pinjaman Peralatan ICT" and the
+    subtitle is "SK ST Francis Xavier Keningau" (as requested; "Sabah" was
+    dropped from the subtitle). `SEKOLAH_NAMA`/`SEKOLAH_SUBTITLE` hold the
+    title/subtitle and are reused across the public header, admin sidebar,
+    login page, print slip, and PDF/DOCX exports.
 
 ## Known dependency advisories
 

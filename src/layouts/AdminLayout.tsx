@@ -14,7 +14,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { cn } from '@/lib/utils'
-import { SEKOLAH_NAMA, ROLE_LABEL } from '@/lib/constants'
+import { SEKOLAH_NAMA, SEKOLAH_SUBTITLE, ROLE_LABEL } from '@/lib/constants'
 
 interface NavItem {
   to: string
@@ -67,7 +67,7 @@ function Sidebar({ items }: { items: NavItem[] }) {
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-foreground">{SEKOLAH_NAMA}</p>
-          <p className="text-xs text-muted-foreground">Sistem Pinjaman Peralatan ICT</p>
+          <p className="text-xs text-muted-foreground">{SEKOLAH_SUBTITLE}</p>
         </div>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">

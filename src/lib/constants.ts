@@ -43,7 +43,5 @@ export const ROLE_LABEL: Record<UserRole, string> = {
 
 export const TUJUAN_LAIN_LAIN = 'Lain-lain'
 
-export const SEKOLAH_NAMA = 'SK ST Francis Xavier Keningau Sabah'
-export const SEKOLAH_SUBTITLE = 'Sistem Pinjaman Peralatan ICT'
-
-export const NAMA_APLIKASI = 'Sistem Pinjaman Peralatan ICT'
+export const SEKOLAH_NAMA = 'Sistem Pinjaman Peralatan ICT'
+export const SEKOLAH_SUBTITLE = 'SK ST Francis Xavier Keningau'

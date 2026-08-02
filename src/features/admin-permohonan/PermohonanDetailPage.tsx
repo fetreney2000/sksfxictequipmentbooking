@@ -12,6 +12,7 @@ import {
   Pencil,
   Trash2,
   Ban,
+  Undo2,
   AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -44,12 +45,14 @@ import { DatePicker } from '@/components/date-picker'
 import { Combobox } from '@/components/combobox'
 import { StatusPermohonanBadge } from '@/components/StatusBadge'
 import { PermohonanPrintView } from '@/features/admin-permohonan/PermohonanPrintView'
+import { ApprovePermohonanDialog } from '@/features/admin-permohonan/ApprovePermohonanDialog'
 import {
   fetchPermohonanDetail,
   fetchPermohonanItems,
-  approvePermohonan,
+  approvePermohonanSelection,
   rejectPermohonan,
   markPermohonanSelesai,
+  undoSelesaiPermohonan,
   cancelPermohonan,
   deletePermohonan,
   updatePermohonan,
@@ -251,6 +254,8 @@ export function PermohonanDetailPage() {
   const queryClient = useQueryClient()
   const { user, isAdmin } = useAuth()
 
+  const [approveOpen, setApproveOpen] = useState(false)
+
   const { data: permohonan, isLoading } = useQuery({
     queryKey: ['pinjam_permohonan', id],
     queryFn: () => fetchPermohonanDetail(id as string),
@@ -270,7 +275,8 @@ export function PermohonanDetailPage() {
   }
 
   const approveMutation = useMutation({
-    mutationFn: () => approvePermohonan(id as string, user?.id ?? ''),
+    mutationFn: (finalPeralatanIds: string[]) =>
+      approvePermohonanSelection(id as string, user?.id ?? '', finalPeralatanIds),
     onSuccess: () => {
       toast.success('Permohonan telah diluluskan.')
       invalidate()
@@ -291,6 +297,15 @@ export function PermohonanDetailPage() {
     mutationFn: () => markPermohonanSelesai(id as string, todayDateStringKL()),
     onSuccess: () => {
       toast.success('Permohonan ditandakan sebagai selesai.')
+      invalidate()
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal mengemas kini.'),
+  })
+
+  const undoSelesaiMutation = useMutation({
+    mutationFn: () => undoSelesaiPermohonan(id as string),
+    onSuccess: () => {
+      toast.success('Permohonan dikembalikan kepada status diluluskan.')
       invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal mengemas kini.'),
@@ -361,6 +376,7 @@ export function PermohonanDetailPage() {
   const showActions =
     isAdmin && permohonan.status === 'menunggu_kelulusan'
   const showReturn = isAdmin && permohonan.status === 'diluluskan'
+  const showUndoSelesai = isAdmin && permohonan.status === 'selesai'
   const showDelete = isAdmin
 
   return (
@@ -390,21 +406,64 @@ export function PermohonanDetailPage() {
         <div className="flex flex-wrap gap-2">
           {showActions && (
             <>
-              <Button
-                onClick={() => approveMutation.mutate()}
-                disabled={approveMutation.isPending}
-              >
+              <Button onClick={() => setApproveOpen(true)}>
                 <CheckCircle2 className="size-4" />
-                {approveMutation.isPending ? 'Meluluskan...' : 'Luluskan'}
+                Luluskan
               </Button>
               <TolakDialog onReject={(r) => rejectMutation.mutateAsync(r)} />
             </>
           )}
           {showReturn && (
-            <Button onClick={() => selesaiMutation.mutate()} disabled={selesaiMutation.isPending}>
-              <CheckCircle2 className="size-4" />
-              {selesaiMutation.isPending ? 'Menyimpan...' : 'Tandai Selesai/Dipulangkan'}
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button disabled={selesaiMutation.isPending}>
+                  <CheckCircle2 className="size-4" />
+                  {selesaiMutation.isPending ? 'Menyimpan...' : 'Tandai Selesai/Dipulangkan'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Tandai Sebagai Selesai?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Permohonan akan ditandakan sebagai selesai, tarikh pemulangan sebenar
+                    akan direkodkan sebagai hari ini, dan semua peralatan akan dikembalikan
+                    kepada status "Tersedia".
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => selesaiMutation.mutate()}>
+                    Ya, Tandai Selesai
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          {showUndoSelesai && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" disabled={undoSelesaiMutation.isPending}>
+                  <Undo2 className="size-4" />
+                  {undoSelesaiMutation.isPending ? 'Menyimpan...' : 'Tandai Belum Selesai'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Tandai Sebagai Belum Selesai?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Permohonan akan dikembalikan kepada status "Diluluskan", tarikh pemulangan
+                    sebenar akan dikosongkan, dan peralatannya akan ditandakan semula sebagai
+                    "Dipinjam". Gunakan jika permohonan ini tersilap ditandakan sebagai selesai.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => undoSelesaiMutation.mutate()}>
+                    Ya, Tandai Belum Selesai
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
           {showActions && (
             <KemaskiniDialog
@@ -557,6 +616,15 @@ export function PermohonanDetailPage() {
       <div className="hidden print:block">
         <PermohonanPrintView permohonan={permohonan} items={items ?? []} />
       </div>
+
+      {items && (
+        <ApprovePermohonanDialog
+          open={approveOpen}
+          onOpenChange={setApproveOpen}
+          items={items}
+          onApprove={(ids) => approveMutation.mutateAsync(ids)}
+        />
+      )}
     </div>
   )
 }

@@ -164,12 +164,57 @@ export async function fetchPermohonanDetail(
   } as unknown as PermohonanJoined
 }
 
-/** Approve: set status + approvals, mark equipment as dipinjam. */
-export async function approvePermohonan(
+/**
+ * Approve with an explicit final list of equipment.
+ *
+ * The admin may exclude requested items (deselected) or substitute others
+ * (replacements). `finalPeralatanIds` is the exact set of peralatan that end up
+ * approved. Requested items not in the list are removed; new peralatan not
+ * previously requested are added; every final peralatan is marked `dipinjam`.
+ */
+export async function approvePermohonanSelection(
   permohonanId: string,
   adminUserId: string,
+  finalPeralatanIds: string[],
 ): Promise<void> {
-  const { data: header, error: headerError } = await supabase
+  if (finalPeralatanIds.length === 0) {
+    throw new Error('Sekurang-kurangnya satu peralatan mesti diluluskan.')
+  }
+
+  const { data: current, error: listError } = await supabase
+    .from('pinjam_permohonan_item')
+    .select('id, peralatan_id')
+    .eq('permohonan_id', permohonanId)
+  if (listError) throw listError
+
+  const currentIds = new Set((current ?? []).map((r) => r.peralatan_id))
+  const finalSet = new Set(finalPeralatanIds)
+
+  const toRemove = (current ?? []).filter((r) => !finalSet.has(r.peralatan_id))
+  const toAdd = finalPeralatanIds.filter((id) => !currentIds.has(id))
+
+  for (const row of toRemove) {
+    const { error } = await supabase.from('pinjam_permohonan_item').delete().eq('id', row.id)
+    if (error) throw error
+  }
+
+  if (toAdd.length > 0) {
+    const { error } = await supabase.from('pinjam_permohonan_item').insert(
+      toAdd.map((peralatan_id) => ({ permohonan_id: permohonanId, peralatan_id })),
+    )
+    if (error) throw error
+  }
+
+  for (const peralatanId of finalPeralatanIds) {
+    const { error } = await supabase
+      .from('pinjam_peralatan')
+      .update({ status: 'dipinjam' })
+      .eq('id', peralatanId)
+      .eq('status', 'tersedia')
+    if (error) throw error
+  }
+
+  const { error: headerError } = await supabase
     .from('pinjam_permohonan')
     .update({
       status: 'diluluskan',
@@ -177,32 +222,7 @@ export async function approvePermohonan(
       diluluskan_pada: nowTimestampKL(),
     })
     .eq('id', permohonanId)
-    .select('id')
-    .single()
-  if (headerError || !header) throw headerError ?? new Error('Gagal mengemas kini permohonan.')
-
-  const { data: items, error: itemsError } = await supabase
-    .from('pinjam_permohonan_item')
-    .select('peralatan_id')
-    .eq('permohonan_id', permohonanId)
-  if (itemsError) throw itemsError
-
-  try {
-    for (const item of items ?? []) {
-      const { error: peralatanError } = await supabase
-        .from('pinjam_peralatan')
-        .update({ status: 'dipinjam' })
-        .eq('id', item.peralatan_id)
-        .eq('status', 'tersedia')
-      if (peralatanError) throw peralatanError
-    }
-  } catch (err) {
-    await supabase
-      .from('pinjam_permohonan')
-      .update({ status: 'menunggu_kelulusan', diluluskan_oleh: null, diluluskan_pada: null })
-      .eq('id', permohonanId)
-    throw err
-  }
+  if (headerError) throw headerError
 }
 
 /** Reject: set status + admin note. Equipment stays tersedia (never changed). */
@@ -271,6 +291,36 @@ export async function cancelPermohonan(permohonanId: string): Promise<void> {
       .update({ status: 'tersedia' })
       .eq('id', item.peralatan_id)
       .eq('status', 'dipinjam')
+    if (peralatanError) throw peralatanError
+  }
+}
+
+/**
+ * Undo an erroneously marked "selesai": revert the request to `diluluskan`,
+ * clear the actual return date, and mark its equipment back to `dipinjam`.
+ * Equipment already loaned out to someone else is left untouched.
+ */
+export async function undoSelesaiPermohonan(permohonanId: string): Promise<void> {
+  const { data: header, error: headerError } = await supabase
+    .from('pinjam_permohonan')
+    .update({ status: 'diluluskan', tarikh_pemulangan_sebenar: null })
+    .eq('id', permohonanId)
+    .select('id')
+    .single()
+  if (headerError || !header) throw headerError ?? new Error('Gagal mengemas kini permohonan.')
+
+  const { data: items, error: itemsError } = await supabase
+    .from('pinjam_permohonan_item')
+    .select('peralatan_id')
+    .eq('permohonan_id', permohonanId)
+  if (itemsError) throw itemsError
+
+  for (const item of items ?? []) {
+    const { error: peralatanError } = await supabase
+      .from('pinjam_peralatan')
+      .update({ status: 'dipinjam' })
+      .eq('id', item.peralatan_id)
+      .eq('status', 'tersedia')
     if (peralatanError) throw peralatanError
   }
 }

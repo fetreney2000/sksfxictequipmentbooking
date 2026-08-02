@@ -81,7 +81,7 @@ export function Step4Semakan() {
 
       <p className="rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-xs text-primary">
         Dengan menghantar permohonan ini, anda bersetuju memulangkan semua peralatan pada
-        tarikh yang dinyatakan. Permohonan akan disemak oleh pihak pentadbir sekolah.
+        tarikh yang dinyatakan. Permohonan akan disemak oleh Guru ICT.
       </p>
     </div>
   )
