@@ -71,11 +71,11 @@ export function Step1Tarikh() {
             onSelect={handleSelect}
             startMonth={todayDate}
             disabled={[{ before: todayDate }, isDayDisabled]}
-            className="mx-auto w-[80%] rounded-lg border"
-            classNames={{ root: 'w-[80%]' }}
+            className="mx-auto w-full max-w-[380px] rounded-xl border bg-card p-3 shadow-sm [--cell-size:3rem]"
+            classNames={{ root: 'w-full max-w-[380px]' }}
           />
         ) : (
-          <Skeleton className="mx-auto h-[320px] w-[80%]" />
+          <Skeleton className="mx-auto h-[360px] w-full max-w-[380px]" />
         )}
       </div>
 
