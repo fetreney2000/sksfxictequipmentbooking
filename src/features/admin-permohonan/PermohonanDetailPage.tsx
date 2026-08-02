@@ -12,6 +12,7 @@ import {
   Pencil,
   Trash2,
   Ban,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -60,6 +61,8 @@ import {
   formatDateStringLongKL,
   shortReference,
   todayDateStringKL,
+  isOnOrAfterDateStringKL,
+  storageToCalendarDateKL,
 } from '@/lib/datetime'
 import {
   exportPermohonanPdf,
@@ -132,11 +135,13 @@ function TolakDialog({
 }
 
 function KemaskiniDialog({
+  tarikhPinjaman,
   initialReturnDate,
   initialTujuanId,
   initialTujuanLain,
   onUpdate,
 }: {
+  tarikhPinjaman: string
   initialReturnDate: string
   initialTujuanId: string
   initialTujuanLain: string | null
@@ -151,6 +156,8 @@ function KemaskiniDialog({
   const [tujuanId, setTujuanId] = useState(initialTujuanId)
   const [tujuanLain, setTujuanLain] = useState(initialTujuanLain ?? '')
   const [loading, setLoading] = useState(false)
+
+  const returnDateInvalid = !isOnOrAfterDateStringKL(returnDate, tarikhPinjaman)
 
   const { data: tujuanList } = useQuery({
     queryKey: ['pinjam_tujuan_pinjaman'],
@@ -195,7 +202,14 @@ function KemaskiniDialog({
             <DatePicker
               value={returnDate}
               onChange={(d) => d && setReturnDate(d)}
+              minDate={storageToCalendarDateKL(tarikhPinjaman)}
             />
+            {returnDateInvalid && (
+              <p className="flex items-center gap-1.5 text-xs font-medium text-destructive">
+                <AlertCircle className="size-3.5" />
+                Tarikh pemulangan mestilah sama atau selepas tarikh pinjaman.
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Tujuan Pinjaman</Label>
@@ -221,7 +235,7 @@ function KemaskiniDialog({
           <Button variant="outline" onClick={() => setOpen(false)}>
             Batal
           </Button>
-          <Button onClick={submit} disabled={loading}>
+          <Button onClick={submit} disabled={loading || returnDateInvalid}>
             {loading ? 'Menyimpan...' : 'Simpan'}
           </Button>
         </DialogFooter>
@@ -393,6 +407,7 @@ export function PermohonanDetailPage() {
           )}
           {showActions && (
             <KemaskiniDialog
+              tarikhPinjaman={permohonan.tarikh_pinjaman}
               initialReturnDate={permohonan.tarikh_pemulangan_dijangka}
               initialTujuanId={permohonan.tujuan_id}
               initialTujuanLain={permohonan.tujuan_lain_teks}

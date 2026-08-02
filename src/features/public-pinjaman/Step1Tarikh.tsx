@@ -12,12 +12,15 @@ import {
   parseDateStringKL,
   calendarDateToStorageKL,
   storageToCalendarDateKL,
+  isBeforeDateStringKL,
 } from '@/lib/datetime'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
 
 export function Step1Tarikh() {
   const tarikhPinjaman = useWizardStore((s) => s.tarikh_pinjaman)
   const setTarikhPinjaman = useWizardStore((s) => s.setTarikhPinjaman)
+  const tarikhPulangan = useWizardStore((s) => s.tarikh_pemulangan_dijangka)
+  const setTarikhPulangan = useWizardStore((s) => s.setTarikhPemulanganDijangka)
 
   const { data: today } = useQuery({
     queryKey: ['today-kl'],
@@ -42,6 +45,14 @@ export function Step1Tarikh() {
     return isWeekendDateStringKL(dayStr)
   }
 
+  const handleSelect = (date: Date | undefined) => {
+    const next = date ? calendarDateToStorageKL(date) : null
+    setTarikhPinjaman(next)
+    if (next && tarikhPulangan && isBeforeDateStringKL(tarikhPulangan, next)) {
+      setTarikhPulangan(null)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div>
@@ -52,18 +63,19 @@ export function Step1Tarikh() {
         </p>
       </div>
 
-      <div className="flex justify-center">
+      <div>
         {today ? (
           <Calendar
             mode="single"
             selected={tarikhPinjaman ? storageToCalendarDateKL(tarikhPinjaman) : undefined}
-            onSelect={(date) => setTarikhPinjaman(date ? calendarDateToStorageKL(date) : null)}
+            onSelect={handleSelect}
             startMonth={todayDate}
             disabled={[{ before: todayDate }, isDayDisabled]}
-            className="w-[360px] rounded-lg border"
+            className="w-full rounded-lg border"
+            classNames={{ root: 'w-full' }}
           />
         ) : (
-          <Skeleton className="h-[320px] w-[360px]" />
+          <Skeleton className="h-[320px] w-full" />
         )}
       </div>
 

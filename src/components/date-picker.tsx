@@ -39,8 +39,14 @@ export function DatePicker({
 
   const disabledMatchers = React.useMemo(() => {
     const matchers: Array<{ before: Date } | { after: Date } | ((d: Date) => boolean)> = []
-    if (minDate) matchers.push({ before: minDate })
-    if (maxDate) matchers.push({ after: maxDate })
+    if (minDate) {
+      const dayStart = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())
+      matchers.push({ before: dayStart })
+    }
+    if (maxDate) {
+      const dayStart = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())
+      matchers.push({ after: dayStart })
+    }
     if (disabledDays) matchers.push(disabledDays)
     return matchers
   }, [minDate, maxDate, disabledDays])

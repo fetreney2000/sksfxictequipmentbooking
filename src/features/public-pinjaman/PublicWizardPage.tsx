@@ -1,11 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { useWizardStore } from '@/store/wizard'
 import { insertPermohonan } from '@/lib/api/permohonan'
-import { shortReference } from '@/lib/datetime'
+import { shortReference, isOnOrAfterDateStringKL } from '@/lib/datetime'
 import { Step1Tarikh } from '@/features/public-pinjaman/Step1Tarikh'
 import { Step2Peralatan } from '@/features/public-pinjaman/Step2Peralatan'
 import { Step3Butiran } from '@/features/public-pinjaman/Step3Butiran'
@@ -27,10 +39,16 @@ export function PublicWizardPage() {
 
   const [submitting, setSubmitting] = useState(false)
 
+  const returnDateValid =
+    !tarikhPinjaman ||
+    !tarikhPulangan ||
+    isOnOrAfterDateStringKL(tarikhPulangan, tarikhPinjaman)
+
   const canProceed =
     (step === 1 && Boolean(tarikhPinjaman)) ||
     (step === 2 && items.length > 0) ||
     (step === 3 &&
+      returnDateValid &&
       Boolean(guru) &&
       Boolean(tujuan) &&
       Boolean(tarikhPulangan) &&
@@ -62,11 +80,36 @@ export function PublicWizardPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className="mb-6 text-center">
-        <h1 className="text-xl font-bold text-foreground sm:text-2xl">Permohonan Pinjaman Peralatan ICT</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Sila lengkapkan maklumat berikut untuk membuat permohonan pinjaman.
-        </p>
+      <div className="relative mb-6">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">Permohonan Pinjaman Peralatan ICT</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Sila lengkapkan maklumat berikut untuk membuat permohonan pinjaman.
+          </p>
+        </div>
+        <div className="absolute top-0 right-0">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <RotateCcw className="size-4" />
+                Mula Semula
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Mula Semula Borang?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Semua maklumat yang telah anda isi akan dibuang dan borang akan
+                  dikembalikan ke langkah pertama.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction onClick={() => reset()}>Ya, Mula Semula</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
 
       {/* Step indicator */}

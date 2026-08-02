@@ -18,13 +18,13 @@ building the app where the build prompt was ambiguous. Review before production 
    files without a header row import every name. Duplicate names (within the
    file or already in the system) are ignored and counted as duplicates.
 
-3. **Return date has no minimum.** Per school request, the expected return date
-   ("Tarikh Pemulangan Dijangka") can be the same day as the borrow date — or
-   even earlier. No minimum is enforced in the UI (Step 3 or the admin
-   "Kemaskini" dialog), and the Postgres CHECK constraint
-   `tarikh_pemulangan_dijangka >= tarikh_pinjaman` was dropped (migration
-   `0003_drop_return_date_check.sql`). Weekends remain blocked for the borrow
-   date and for the return date picker.
+3. **Return date minimum = borrow date.** The expected return date
+   ("Tarikh Pemulangan Dijangka") cannot be earlier than the borrow date, but it
+   may be the same day. The picker disables every date before the borrow date,
+   and the wizard re-validates on step 3. (The Postgres CHECK constraint
+   `tarikh_pemulangan_dijangka >= tarikh_pinjaman` was dropped in migration
+   `0003_drop_return_date_check.sql`; the rule is now enforced at the UI layer.)
+   Weekends remain blocked for the borrow date and for the return date picker.
 
 4. **Password minimum is 6 characters.** Per school request, user passwords
    (create/edit in Pengurusan Pengguna, change in Profil, and
