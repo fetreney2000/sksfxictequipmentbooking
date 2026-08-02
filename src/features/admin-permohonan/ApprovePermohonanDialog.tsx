@@ -74,7 +74,8 @@ function ReplacementPicker({
         <DialogHeader>
           <DialogTitle>Ganti Peralatan</DialogTitle>
           <DialogDescription>
-            Pilih peralatan lain yang tersedia untuk menggantikan item ini.
+            Pilih peralatan lain yang tersedia dalam kategori yang sama untuk
+            menggantikan item ini.
           </DialogDescription>
         </DialogHeader>
         <div className="relative">
@@ -89,7 +90,7 @@ function ReplacementPicker({
         <ScrollArea className="h-64">
           {filtered.length === 0 ? (
             <p className="p-6 text-center text-sm text-muted-foreground">
-              Tiada peralatan tersedia untuk diganti.
+              Tiada peralatan tersedia dalam kategori ini untuk diganti.
             </p>
           ) : (
             <ul className="space-y-2">
@@ -149,6 +150,20 @@ export function ApprovePermohonanDialog({
     [allPeralatan],
   )
 
+  const pickerCategoryId =
+    pickerFor !== null && rows[pickerFor]
+      ? rows[pickerFor].item.peralatan.kategori_id
+      : null
+
+  /** Only available equipment of the same category as the item being replaced. */
+  const pickerOptions = useMemo(
+    () =>
+      pickerCategoryId
+        ? tersedia.filter((p) => p.kategori_id === pickerCategoryId)
+        : [],
+    [tersedia, pickerCategoryId],
+  )
+
   const updateRow = (index: number, patch: Partial<ApproveRow>) => {
     setRows((prev) => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)))
   }
@@ -192,7 +207,7 @@ export function ApprovePermohonanDialog({
             <DialogDescription>
               Pilih peralatan yang ingin diluluskan. Nyahtanda untuk mengecualikan
               item, atau gunakan "Ganti" untuk menukar kepada peralatan lain yang
-              tersedia.
+              tersedia dalam kategori yang sama.
             </DialogDescription>
           </DialogHeader>
 
@@ -304,7 +319,7 @@ export function ApprovePermohonanDialog({
         <ReplacementPicker
           open
           onOpenChange={(o) => !o && setPickerFor(null)}
-          options={tersedia}
+          options={pickerOptions}
           takenIds={takenIds}
           onSelect={(peralatan) => {
             updateRow(pickerFor, { replacement: peralatan })

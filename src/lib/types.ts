@@ -277,6 +277,9 @@ export interface PermohonanJoined extends PermohonanRow {
 
 export interface PermohonanItemJoined extends PermohonanItemRow {
   peralatan: {
+    id: string
+    kategori_id: string
+    jenama_id: string
     nombor_siri: string
     nama_peralatan: string | null
     status: PeralatanStatus
