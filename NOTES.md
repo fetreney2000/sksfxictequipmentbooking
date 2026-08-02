@@ -86,6 +86,13 @@ building the app where the build prompt was ambiguous. Review before production 
 14. **Clicks on rows.** In the permohonan list, clicking anywhere on a row opens
     the detail page; the "Lihat" button does the same.
 
+15. **Defaulter (peminjam lewat) definition.** A borrower is flagged as a
+    defaulter when their permohonan is still `diluluskan` (on loan) and its
+    expected return date (`tarikh_pemulangan_dijangka`) is earlier than today
+    (Kuala Lumpur). The Dashboard shows all defaulters; the Laporan page shows
+    defaulters whose expected return date falls within the selected report
+    range. "Lewat N hari" is calendar days overdue (`daysBetweenKL`).
+
 ## Known dependency advisories
 
 - **`react-router-dom@6`** (required by the prompt): npm audit reports the

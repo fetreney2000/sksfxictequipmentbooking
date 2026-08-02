@@ -16,16 +16,19 @@ import {
   AlertTriangle,
   ChevronRight,
   CalendarClock,
+  UserX,
 } from 'lucide-react'
 import {
   fetchDashboardStats,
   fetchDueSoon,
   fetchRecentPending,
+  fetchDefaulters,
 } from '@/lib/api/dashboard'
 import {
   todayDateStringKL,
   formatDateStringKL,
   compareDateStringsKL,
+  daysBetweenKL,
 } from '@/lib/datetime'
 import { STATUS_PERMOHONAN_LABEL, STATUS_PERMOHONAN_VARIANT } from '@/lib/constants'
 
@@ -45,6 +48,11 @@ export function DashboardPage() {
   const { data: recentPending, isLoading: loadingPending } = useQuery({
     queryKey: ['dashboard', 'recent-pending'],
     queryFn: fetchRecentPending,
+  })
+
+  const { data: defaulters, isLoading: loadingDefaulters } = useQuery({
+    queryKey: ['dashboard', 'defaulters', today],
+    queryFn: () => fetchDefaulters(today),
   })
 
   const cards = [
@@ -102,6 +110,56 @@ export function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {/* Defaulter card */}
+      <Card className="border-destructive/40">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+            <UserX className="size-4 text-destructive" />
+            Peminjam Lewat Memulangkan (Defaulter)
+          </CardTitle>
+          <Link to="/admin/permohonan" className="text-xs font-medium text-primary hover:underline">
+            Lihat Semua
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {loadingDefaulters ? (
+            <div className="space-y-2">
+              <Skeleton className="h-12" />
+              <Skeleton className="h-12" />
+            </div>
+          ) : defaulters && defaulters.length > 0 ? (
+            <ul className="divide-y">
+              {defaulters.map((p) => {
+                const overdue = daysBetweenKL(p.tarikh_pemulangan_dijangka, today)
+                return (
+                  <li key={p.id} className="flex items-center justify-between gap-3 py-2.5">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{p.guru?.nama_guru}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Tarikh pemulangan: {formatDateStringKL(p.tarikh_pemulangan_dijangka)}{' '}
+                        <span className="font-semibold text-destructive">
+                          &middot; Lewat {overdue} hari
+                        </span>
+                      </p>
+                    </div>
+                    <Link
+                      to={`/admin/permohonan/${p.id}`}
+                      className="flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    >
+                      Buka <ChevronRight className="size-3.5" />
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : (
+            <p className="rounded-lg bg-muted/30 p-4 text-sm text-muted-foreground">
+              Tiada pinjaman yang lewat dipulangkan. Semua peralatan dipulangkan mengikut masa.
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

@@ -1,4 +1,4 @@
-import { addDays, isValid, isBefore, isSameDay } from 'date-fns'
+import { addDays, differenceInCalendarDays, isValid, isBefore, isSameDay } from 'date-fns'
 import { formatInTimeZone, fromZonedTime, toZonedTime } from 'date-fns-tz'
 
 /**
@@ -113,6 +113,17 @@ export function isOnOrAfterDateStringKL(a: string, b: string): boolean {
 /** True if a <= b for stored date strings. */
 export function isOnOrBeforeDateStringKL(a: string, b: string): boolean {
   return compareDateStringsKL(a, b) <= 0
+}
+
+/**
+ * Calendar days from date A to date B (positive when B is after A).
+ * e.g. daysBetweenKL('2026-08-01', '2026-08-03') === 2
+ */
+export function daysBetweenKL(fromDateStr: string, toDateStr: string): number {
+  return differenceInCalendarDays(
+    parseDateStringKL(toDateStr),
+    parseDateStringKL(fromDateStr),
+  )
 }
 
 /** Current KL date-time formatted for display (e.g. for export generation stamps). */

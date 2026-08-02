@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
-import { FileDown, FileText, Download } from 'lucide-react'
+import { FileDown, FileText, Download, UserX, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DatePicker } from '@/components/date-picker'
@@ -15,6 +16,8 @@ import {
   formatDateStringKL,
   isOnOrAfterDateStringKL,
   isOnOrBeforeDateStringKL,
+  compareDateStringsKL,
+  daysBetweenKL,
   storageToCalendarDateKL,
   shortReference,
 } from '@/lib/datetime'
@@ -63,6 +66,20 @@ export function LaporanPage() {
         isOnOrBeforeDateStringKL(p.tarikh_pinjaman, hinggaTarikh),
     )
   }, [allRows, dariTarikh, hinggaTarikh])
+
+  /** Loans due in the report period that are still not returned (overdue today). */
+  const defaulters = useMemo(() => {
+    if (!allRows || !dariTarikh || !hinggaTarikh) return []
+    return allRows
+      .filter(
+        (p) =>
+          p.status === 'diluluskan' &&
+          isOnOrAfterDateStringKL(p.tarikh_pemulangan_dijangka, dariTarikh) &&
+          isOnOrBeforeDateStringKL(p.tarikh_pemulangan_dijangka, hinggaTarikh) &&
+          compareDateStringsKL(p.tarikh_pemulangan_dijangka, today) < 0,
+      )
+      .sort((a, b) => compareDateStringsKL(a.tarikh_pemulangan_dijangka, b.tarikh_pemulangan_dijangka))
+  }, [allRows, dariTarikh, hinggaTarikh, today])
 
   const stats = useMemo(() => {
     const pecahan: Record<PermohonanStatus, number> = {
@@ -242,6 +259,51 @@ export function LaporanPage() {
               </CardContent>
             </Card>
           )}
+
+          <Card className="border-destructive/40">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                <UserX className="size-4 text-destructive" />
+                Peminjam Lewat Memulangkan (Defaulter)
+              </CardTitle>
+              <Link to="/admin/permohonan" className="text-xs font-medium text-primary hover:underline">
+                Lihat Semua
+              </Link>
+            </CardHeader>
+            <CardContent>
+              {defaulters.length === 0 ? (
+                <p className="rounded-lg bg-muted/30 p-4 text-sm text-muted-foreground">
+                  Tiada pinjaman lewat dipulangkan dalam tempoh yang dipilih.
+                </p>
+              ) : (
+                <ul className="divide-y">
+                  {defaulters.map((p) => {
+                    const overdue = daysBetweenKL(p.tarikh_pemulangan_dijangka, today)
+                    return (
+                      <li key={p.id} className="flex items-center justify-between gap-3 py-2.5">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">{p.guru?.nama_guru}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Rujukan: {shortReference(p.id)} &middot; Tarikh pemulangan:{' '}
+                            {formatDateStringKL(p.tarikh_pemulangan_dijangka)}{' '}
+                            <span className="font-semibold text-destructive">
+                              &middot; Lewat {overdue} hari
+                            </span>
+                          </p>
+                        </div>
+                        <Link
+                          to={`/admin/permohonan/${p.id}`}
+                          className="flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                        >
+                          Buka <ChevronRight className="size-3.5" />
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>

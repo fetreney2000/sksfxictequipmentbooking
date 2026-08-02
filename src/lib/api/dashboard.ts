@@ -67,3 +67,21 @@ export async function fetchRecentPending(): Promise<PermohonanJoined[]> {
   })) as unknown as PermohonanJoined[]
 }
 
+/** Loans still on loan (diluluskan) whose expected return date has already passed. */
+export async function fetchDefaulters(todayKL: string): Promise<PermohonanJoined[]> {
+  const { data, error } = await supabase
+    .from('pinjam_permohonan')
+    .select(
+      '*, guru:pinjam_guru(id, nama_guru), tujuan:pinjam_tujuan_pinjaman(id, tujuan), items:pinjam_permohonan_item(id)',
+    )
+    .eq('status', 'diluluskan')
+    .lt('tarikh_pemulangan_dijangka', todayKL)
+    .order('tarikh_pemulangan_dijangka')
+  if (error) throw error
+  const raw = data as unknown as Array<Record<string, unknown> & { items?: unknown[] }>
+  return raw.map((row) => ({
+    ...row,
+    item_count: Array.isArray(row.items) ? row.items.length : 0,
+  })) as unknown as PermohonanJoined[]
+}
+
