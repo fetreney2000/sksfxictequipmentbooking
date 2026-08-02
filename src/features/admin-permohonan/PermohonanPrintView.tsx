@@ -76,18 +76,15 @@ export function PermohonanPrintView({
         </tbody>
       </table>
 
-      <div className="mt-14 flex justify-between text-sm">
-        <div>
+      <div className="mt-14">
+        <div className="flex justify-between text-sm">
           <p className="font-semibold">Nama &amp; Tandatangan Peminjam</p>
-          <p className="mt-12 border-t border-gray-400 pt-1 text-xs text-gray-500">
-            ........................................
-          </p>
-        </div>
-        <div>
           <p className="font-semibold">Pegawai Meluluskan</p>
-          <p className="mt-12 border-t border-gray-400 pt-1 text-xs text-gray-500">
-            ........................................
-          </p>
+        </div>
+        <div className="h-20" aria-hidden="true" />
+        <div className="flex justify-between gap-6 border-t border-dashed border-gray-400 pt-3 text-sm text-gray-600">
+          <p>Pegawai yang Meminjam: ........................</p>
+          <p>Pegawai yang Meluluskan: ........................</p>
         </div>
       </div>
     </div>

@@ -57,15 +57,35 @@ function lastY(doc: InstanceType<jsPDFModule['jsPDF']>): number {
 }
 
 function signatureBlock(doc: InstanceType<jsPDFModule['jsPDF']>, y: number) {
+  const pageHeight = doc.internal.pageSize.getHeight()
+  const spaceHeight = 52
+  let startY = y
+  if (startY + spaceHeight > pageHeight - 20) {
+    doc.addPage()
+    startY = 40
+  }
+
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(10)
   doc.setTextColor(...NAVY)
-  doc.text('Nama & Tandatangan Peminjam', 24, y)
-  doc.text('Pegawai Meluluskan', 132, y)
-  doc.setLineWidth(0.4)
+  doc.text('Nama & Tandatangan Peminjam', 24, startY)
+  doc.text('Pegawai Meluluskan', 132, startY)
+
+  const labelY = startY + spaceHeight
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.setTextColor(...GRAY)
+  const leftLabel = 'Pegawai yang Meminjam: '
+  const rightLabel = 'Pegawai yang Meluluskan: '
+  doc.text(leftLabel, 24, labelY)
+  doc.text(rightLabel, 132, labelY)
+
+  doc.setLineWidth(0.3)
   doc.setDrawColor(...GRAY)
-  doc.line(24, y + 20, 96, y + 20)
-  doc.line(132, y + 20, 204, y + 20)
+  doc.setLineDashPattern([1, 1], 0)
+  doc.line(24 + doc.getTextWidth(leftLabel), labelY + 2, 110, labelY + 2)
+  doc.line(132 + doc.getTextWidth(rightLabel), labelY + 2, 196, labelY + 2)
+  doc.setLineDashPattern([], 0)
 }
 
 export function permohonanFilename(p: PermohonanJoined, ext: string): string {

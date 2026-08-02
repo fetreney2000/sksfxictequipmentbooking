@@ -115,19 +115,21 @@ async function signatureParagraphs(docx: DocxModule): Promise<Paragraph[]> {
   return [
     new Paragraph({ text: '', spacing: { before: 600 } }),
     new Paragraph({
-      spacing: { before: 600 },
       children: [
         new TextRun({ text: 'Nama & Tandatangan Peminjam', bold: true, size: 20 }),
         new TextRun({ text: '\t\t\t\t\t\t' }),
         new TextRun({ text: 'Pegawai Meluluskan', bold: true, size: 20 }),
       ],
     }),
+    new Paragraph({ text: '', spacing: { before: 700 } }),
+    new Paragraph({ text: '', spacing: { before: 500 } }),
     new Paragraph({
-      spacing: { before: 1000 },
       children: [
-        new TextRun({ text: '________________________', size: 20 }),
+        new TextRun({ text: 'Pegawai yang Meminjam: ', size: 20 }),
+        new TextRun({ text: '............................', size: 20, color: GRAY }),
         new TextRun({ text: '\t\t\t\t\t' }),
-        new TextRun({ text: '________________________', size: 20 }),
+        new TextRun({ text: 'Pegawai yang Meluluskan: ', size: 20 }),
+        new TextRun({ text: '............................', size: 20, color: GRAY }),
       ],
     }),
   ]
