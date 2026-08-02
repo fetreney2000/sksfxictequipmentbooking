@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -185,6 +185,16 @@ export function PublicWizardPage() {
           )}
         </div>
       </div>
+
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        Pentadbir sistem?{' '}
+        <Link
+          to="/admin/login"
+          className="text-muted-foreground underline decoration-muted-foreground/40 underline-offset-2 transition-colors hover:text-foreground"
+        >
+          Log masuk di sini
+        </Link>
+      </p>
     </div>
   )
 }

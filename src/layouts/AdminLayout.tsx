@@ -1,5 +1,5 @@
 ﻿import type { ReactNode } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   ClipboardList,
@@ -10,6 +10,7 @@ import {
   LogOut,
   MonitorSmartphone,
   Package,
+  ExternalLink,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -126,13 +127,23 @@ export function AdminLayout() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              <LogOut className="size-4" />
-              <span className="hidden sm:inline">Log Keluar</span>
-            </button>
+            <div className="flex items-center gap-1">
+              <Link
+                to="/pinjam"
+                title="Permohonan Pinjaman Peralatan ICT"
+                className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <ExternalLink className="size-4" />
+                <span className="hidden sm:inline">Permohonan Pinjaman</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <LogOut className="size-4" />
+                <span className="hidden sm:inline">Log Keluar</span>
+              </button>
+            </div>
           </div>
         </header>
 
