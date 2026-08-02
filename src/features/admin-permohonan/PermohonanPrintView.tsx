@@ -81,11 +81,7 @@ export function PermohonanPrintView({
           <p className="font-semibold">Nama &amp; Tandatangan Peminjam</p>
           <p className="font-semibold">Pegawai Meluluskan</p>
         </div>
-        <div className="h-20" aria-hidden="true" />
-        <div className="flex justify-between gap-6 border-t border-dashed border-gray-400 pt-3 text-sm text-gray-600">
-          <p>Pegawai yang Meminjam: ........................</p>
-          <p>Pegawai yang Meluluskan: ........................</p>
-        </div>
+        <div className="h-24" aria-hidden="true" />
       </div>
     </div>
   )
