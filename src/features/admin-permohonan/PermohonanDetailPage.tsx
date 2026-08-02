@@ -598,7 +598,7 @@ export function PermohonanDetailPage() {
                         {item.peralatan.nama_peralatan ?? item.peralatan.nombor_siri}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {item.peralatan.kategori.nama_kategori} Â· {item.peralatan.jenama.nama_jenama} Â·{' '}
+                        {item.peralatan.kategori.nama_kategori} · {item.peralatan.jenama.nama_jenama} ·{' '}
                         {item.peralatan.nombor_siri}
                       </p>
                     </div>

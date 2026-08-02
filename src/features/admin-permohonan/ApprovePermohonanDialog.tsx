@@ -245,8 +245,8 @@ export function ApprovePermohonanDialog({
                               Nombor Siri: {row.replacement.nombor_siri}
                             </p>
                             <p className="mt-0.5 text-xs text-muted-foreground">
-                              Original: {row.item.peralatan.kategori.nama_kategori} Â·{' '}
-                              {row.item.peralatan.jenama.nama_jenama} Â·{' '}
+                              Original: {row.item.peralatan.kategori.nama_kategori} ·{' '}
+                              {row.item.peralatan.jenama.nama_jenama} ·{' '}
                               {row.item.peralatan.nombor_siri}
                             </p>
                           </>
@@ -257,8 +257,8 @@ export function ApprovePermohonanDialog({
                                 row.item.peralatan.nombor_siri}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {row.item.peralatan.kategori.nama_kategori} Â·{' '}
-                              {row.item.peralatan.jenama.nama_jenama} Â· Nombor Siri:{' '}
+                              {row.item.peralatan.kategori.nama_kategori} ·{' '}
+                              {row.item.peralatan.jenama.nama_jenama} · Nombor Siri:{' '}
                               {row.item.peralatan.nombor_siri}
                             </p>
                           </>

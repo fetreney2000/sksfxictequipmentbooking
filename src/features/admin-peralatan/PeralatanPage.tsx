@@ -432,7 +432,7 @@ export function PeralatanPage() {
         <div>
           <h1 className="text-xl font-bold">Pengurusan Peralatan ICT</h1>
           <p className="text-sm text-muted-foreground">
-            Inventori peralatan ICT sekolah â€” pendaftaran, kategori, jenama dan pelupusan.
+            Inventori peralatan ICT sekolah — pendaftaran, kategori, jenama dan pelupusan.
           </p>
         </div>
         {tab === 'peralatan' && (
