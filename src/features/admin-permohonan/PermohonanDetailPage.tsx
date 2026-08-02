@@ -57,8 +57,9 @@ import {
 } from '@/lib/api/permohonan'
 import { useAuth } from '@/hooks/useAuth'
 import {
-  formatDateStringKL,
   formatDateStringLongKL,
+  toDateDisplayKL,
+  toDateTimeDisplayKL,
   shortReference,
   todayDateStringKL,
   isOnOrAfterDateStringKL,
@@ -382,7 +383,7 @@ export function PermohonanDetailPage() {
           <div className="mt-1 flex items-center gap-2">
             <StatusPermohonanBadge status={permohonan.status} />
             <span className="text-xs text-muted-foreground">
-              Dihantar pada {formatDateStringKL(permohonan.created_at)}
+              Dihantar pada {toDateTimeDisplayKL(permohonan.created_at)}
             </span>
           </div>
         </div>
@@ -516,7 +517,7 @@ export function PermohonanDetailPage() {
             {permohonan.diluluskan_pada && (
               <div className="flex justify-between gap-4 py-1.5">
                 <span className="text-muted-foreground">Diluluskan Pada</span>
-                <span className="font-medium">{formatDateStringKL(permohonan.diluluskan_pada)}</span>
+                <span className="font-medium">{toDateDisplayKL(permohonan.diluluskan_pada)}</span>
               </div>
             )}
           </CardContent>

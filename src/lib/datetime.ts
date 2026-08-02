@@ -51,15 +51,22 @@ export function parseDateStringKL(dateStr: string): Date {
   return fromZonedTime(`${dateStr}T12:00:00`, TIMEZONE)
 }
 
+/** True if the string looks like a full timestamp rather than a date-only value. */
+function looksLikeTimestamp(dateStr: string): boolean {
+  return /[Tt ]\d{1,2}:\d{2}/.test(dateStr)
+}
+
 /** Display a stored date string (yyyy-MM-dd) as dd/MM/yyyy in KL. */
 export function formatDateStringKL(dateStr: string | null | undefined): string {
   if (!dateStr) return '-'
+  if (looksLikeTimestamp(dateStr)) return toDateDisplayKL(dateStr)
   return formatInTimeZone(parseDateStringKL(dateStr), TIMEZONE, DATE_FORMAT_DISPLAY)
 }
 
 /** Display a stored date string (yyyy-MM-dd) as a long Bahasa Malaysia-style date. */
 export function formatDateStringLongKL(dateStr: string | null | undefined): string {
   if (!dateStr) return '-'
+  if (looksLikeTimestamp(dateStr)) return toDateDisplayKL(dateStr)
   return formatInTimeZone(parseDateStringKL(dateStr), TIMEZONE, 'd MMMM yyyy')
 }
 
