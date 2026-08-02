@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Create/update the initial admin user.
  *
  * Usage:
@@ -53,8 +53,8 @@ async function main() {
   const password = args.password || ''
   const fullName = args.name || 'Pentadbir Sistem'
   const role = args.role || 'admin'
-  if (!password || password.length < 8) {
-    console.error('--password required and must be at least 8 characters.')
+  if (!password || password.length < 6) {
+    console.error('--password required and must be at least 6 characters.')
     process.exit(1)
   }
 
@@ -90,3 +90,4 @@ main().catch((err) => {
   console.error(err)
   process.exit(1)
 })
+

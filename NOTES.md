@@ -11,23 +11,37 @@ building the app where the build prompt was ambiguous. Review before production 
    Public holidays are NOT handled (no holiday calendar source was specified).
 
 2. **Excel guru import convention.** The workbook must contain a sheet named
-   exactly **"Nama Guru"**, names must be in **column B**, one name per row,
-   and **row 1 is treated as a header and skipped** (names are read starting at
-   row 2). Duplicate names (within the file or already in the system) are
-   ignored and counted as duplicates.
+   **"Nama Guru"** (case-insensitive; a sheet named "nama guru" is accepted).
+   Names are read from **column B**, one name per row, with a fallback to
+   **column A** when column B has no names. The **first row is skipped only if it
+   is a header** (e.g. "Nama", "Nama Guru", "No", or a bare column letter);
+   files without a header row import every name. Duplicate names (within the
+   file or already in the system) are ignored and counted as duplicates.
 
-3. **Reference number.** The human-readable "Rujukan" shown on the success page
+3. **Return date has no minimum.** Per school request, the expected return date
+   ("Tarikh Pemulangan Dijangka") can be the same day as the borrow date — or
+   even earlier. No minimum is enforced in the UI (Step 3 or the admin
+   "Kemaskini" dialog), and the Postgres CHECK constraint
+   `tarikh_pemulangan_dijangka >= tarikh_pinjaman` was dropped (migration
+   `0003_drop_return_date_check.sql`). Weekends remain blocked for the borrow
+   date and for the return date picker.
+
+4. **Password minimum is 6 characters.** Per school request, user passwords
+   (create/edit in Pengurusan Pengguna, change in Profil, and
+   `scripts/create-admin.mjs`) require at least 6 characters.
+
+5. **Reference number.** The human-readable "Rujukan" shown on the success page
    and in the admin panel is the **first 8 characters (uppercased) of the
    request UUID**.
 
-4. **Session persistence is not bank-grade.** Because the app deliberately does
+6. **Session persistence is not bank-grade.** Because the app deliberately does
    not use Supabase Auth, a successful username/password login stores
    `{ id, username, full_name, role }` in the Zustand store and `localStorage`.
    Presence of that stored user is treated as "logged in". Anyone with access to
    the browser's localStorage can impersonate a session. Acceptable for an
    internal Hobby-tier school tool; document if stricter security is required.
 
-5. **RLS is pragmatic, not per-role.** Without Supabase Auth there is no
+7. **RLS is pragmatic, not per-role.** Without Supabase Auth there is no
    `auth.uid()` to key policies on. RLS is enabled on all tables but the anon
    key is granted broad `SELECT/INSERT/UPDATE/DELETE` on all tables (public +
    admin). Role-based restrictions (admin vs penyelia) are enforced **in the
@@ -35,37 +49,37 @@ building the app where the build prompt was ambiguous. Review before production 
    "Anda tidak mempunyai kebenaran..." message. `password_hash` is never
    selected by client code except inside the login check itself.
 
-6. **"Active only" filters are query-layer, not RLS.** The prompt asks RLS to
+8. **"Active only" filters are query-layer, not RLS.** The prompt asks RLS to
    allow the public flow to see only `is_active = true` gurus and
    `status = 'tersedia'` equipment. Because the same anon key serves the admin
    panel (which needs to see inactive gurus and all equipment), the public
    wizard enforces these filters in its own Supabase queries.
 
-7. **Equipment status transitions.** Approving a request sets the equipment to
+9. **Equipment status transitions.** Approving a request sets the equipment to
    `dipinjam`; marking the request `selesai` (returned), `ditolak`, or
    `dibatalkan` reverts equipment to `tersedia`. These are implemented as
    **sequential updates with error handling** in the client (no RPC), per the
    prompt's allowance. Deleting a request also reverts any `dipinjam` equipment.
 
-8. **Equipment status for a rejected request.** Rejected requests never changed
-   equipment status (equipment is only marked `dipinjam` on approval), so
-   rejecting requires no equipment update.
+10. **Equipment status for a rejected request.** Rejected requests never changed
+    equipment status (equipment is only marked `dipinjam` on approval), so
+    rejecting requires no equipment update.
 
-9. **Deleting a guru/user with existing references.** Postgres foreign keys use
-   `ON DELETE RESTRICT` for `pinjam_guru`, `pinjam_jenama`, `pinjam_kategori`,
-   `pinjam_peralatan`, and `pinjam_tujuan`. Deleting a referenced row fails with
-   a Bahasa Melayu error toast; the record must first be deactivated instead.
+11. **Deleting a guru/user with existing references.** Postgres foreign keys use
+    `ON DELETE RESTRICT` for `pinjam_guru`, `pinjam_jenama`, `pinjam_kategori`,
+    `pinjam_peralatan`, and `pinjam_tujuan`. Deleting a referenced row fails with
+    a Bahasa Melayu error toast; the record must first be deactivated instead.
 
-10. **Permission matrix** (implemented exactly as Section 7.2): penyelia can view
+12. **Permission matrix** (implemented exactly as Section 7.2): penyelia can view
     dashboard, laporan (view + export), and permohonan (view only), plus their
     own profil. Approve/reject/return/delete/edit, guru management, and user
     management are admin-only. `/admin/guru` and `/admin/pengguna` are guarded by
     a `RequireRole` wrapper.
 
-11. **Kemaskini (edit) scope.** The "Kemaskini" action on a permohonan only
+13. **Kemaskini (edit) scope.** The "Kemaskini" action on a permohonan only
     edits `tarikh_pemulangan_dijangka`, `tujuan_id`, and `tujuan_lain_teks`.
 
-12. **Clicks on rows.** In the permohonan list, clicking anywhere on a row opens
+14. **Clicks on rows.** In the permohonan list, clicking anywhere on a row opens
     the detail page; the "Lihat" button does the same.
 
 ## Known dependency advisories
@@ -87,12 +101,12 @@ building the app where the build prompt was ambiguous. Review before production 
 
 ## Supabase setup (once per environment)
 
-1. Run the SQL files in `supabase/migrations/` (0001, then 0002) in the
+1. Run the SQL files in `supabase/migrations/` (0001, 0002, and 0003) in the
    Supabase SQL editor.
 2. Copy `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` /
    `VITE_SUPABASE_ANON_KEY`.
 3. Create the first admin user:
-   `node scripts/create-admin.mjs --username admin --password <min-8-chars> --name "Pentadbir Sistem"`
+   `node scripts/create-admin.mjs --username admin --password <min-6-chars> --name "Pentadbir Sistem"`
 
 ## Build / run
 

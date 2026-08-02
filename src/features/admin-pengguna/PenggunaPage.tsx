@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
@@ -129,7 +129,7 @@ export function PenggunaPage() {
 
   const isSelf = (id: string) => id === currentUserId
 
-  const passwordValid = addForm.password.length >= 8
+  const passwordValid = addForm.password.length >= 6
 
   const handleEdit = (user: SafeUser) => {
     setEditTarget({ id: user.id })
@@ -293,7 +293,7 @@ export function PenggunaPage() {
                 required
               />
               {!passwordValid && (
-                <p className="text-xs text-destructive">Kata laluan mestilah sekurang-kurangnya 8 aksara.</p>
+                <p className="text-xs text-destructive">Kata laluan mestilah sekurang-kurangnya 6 aksara.</p>
               )}
             </div>
             <div className="space-y-2">
@@ -370,8 +370,8 @@ export function PenggunaPage() {
                 autoComplete="new-password"
                 placeholder="Kosongkan jika tidak mahu menukar"
               />
-              {editForm.password && editForm.password.length < 8 && (
-                <p className="text-xs text-destructive">Kata laluan mestilah sekurang-kurangnya 8 aksara.</p>
+              {editForm.password && editForm.password.length < 6 && (
+                <p className="text-xs text-destructive">Kata laluan mestilah sekurang-kurangnya 6 aksara.</p>
               )}
             </div>
             <div className="space-y-2">
@@ -411,7 +411,7 @@ export function PenggunaPage() {
               disabled={
                 !editForm.username.trim() ||
                 !editForm.full_name.trim() ||
-                (editForm.password.length > 0 && editForm.password.length < 8) ||
+                (editForm.password.length > 0 && editForm.password.length < 6) ||
                 editMutation.isPending
               }
             >
@@ -423,3 +423,4 @@ export function PenggunaPage() {
     </div>
   )
 }
+

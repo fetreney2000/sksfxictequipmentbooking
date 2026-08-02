@@ -352,17 +352,19 @@ export function GuruPage() {
                 Fail mestilah format Excel (<span className="font-mono">.xlsx</span>).
               </li>
               <li>
-                Fail mesti mengandungi helaian (sheet) bernama tepat{' '}
-                <span className="font-mono font-semibold text-foreground">"{SHEET_NAMA_GURU}"</span>.
+                Fail mesti mengandungi helaian (sheet) bernama{' '}
+                <span className="font-mono font-semibold text-foreground">"{SHEET_NAMA_GURU}"</span>{' '}
+                (huruf besar/kecil tidak penting).
               </li>
               <li>
                 Nama guru mesti disenaraikan dalam kolum{' '}
                 <span className="font-mono font-semibold text-foreground">B</span> ({GURU_IMPORT_COLUMN}),
-                satu nama setiap baris.
+                satu nama setiap baris. Jika kolum B kosong, sistem akan cuba membaca
+                kolum A.
               </li>
               <li>
-                Baris 1 (pertama) dianggap sebagai tajuk (header) dan akan diabaikan.
-                Nama bermula dari baris 2.
+                Baris pertama akan diabaikan hanya jika ia adalah tajuk (cth. "Nama"
+                atau "Nama Guru"). Jika tiada baris tajuk, semua nama akan dibaca.
               </li>
               <li>
                 Nama yang sudah wujud dalam sistem akan disenaraikan sebagai "duplikat"

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useWizardStore } from '@/store/wizard'
 import { insertPermohonan } from '@/lib/api/permohonan'
-import { shortReference, isOnOrAfterDateStringKL } from '@/lib/datetime'
+import { shortReference } from '@/lib/datetime'
 import { Step1Tarikh } from '@/features/public-pinjaman/Step1Tarikh'
 import { Step2Peralatan } from '@/features/public-pinjaman/Step2Peralatan'
 import { Step3Butiran } from '@/features/public-pinjaman/Step3Butiran'
@@ -27,16 +27,10 @@ export function PublicWizardPage() {
 
   const [submitting, setSubmitting] = useState(false)
 
-  const returnDateValid =
-    !tarikhPinjaman ||
-    !tarikhPulangan ||
-    isOnOrAfterDateStringKL(tarikhPulangan, tarikhPinjaman)
-
   const canProceed =
     (step === 1 && Boolean(tarikhPinjaman)) ||
     (step === 2 && items.length > 0) ||
     (step === 3 &&
-      returnDateValid &&
       Boolean(guru) &&
       Boolean(tujuan) &&
       Boolean(tarikhPulangan) &&

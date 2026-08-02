@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+﻿import { useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -117,9 +117,9 @@ export function ProfilPage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
-              {newPassword && newPassword.length < 8 && (
+              {newPassword && newPassword.length < 6 && (
                 <p className="text-xs text-destructive">
-                  Kata laluan mestilah sekurang-kurangnya 8 aksara.
+                  Kata laluan mestilah sekurang-kurangnya 6 aksara.
                 </p>
               )}
             </div>
@@ -151,3 +151,4 @@ export function ProfilPage() {
     </div>
   )
 }
+

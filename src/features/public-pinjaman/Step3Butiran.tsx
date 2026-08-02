@@ -3,15 +3,11 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { DatePicker } from '@/components/date-picker'
 import { Combobox } from '@/components/combobox'
-import { AlertCircle } from 'lucide-react'
 import { useWizardStore } from '@/store/wizard'
 import { fetchActiveGuru, fetchTujuanList } from '@/lib/api/permohonan'
 import {
-  todayDateStringKL,
-  isOnOrAfterDateStringKL,
   isWeekendDateStringKL,
   calendarDateToStorageKL,
-  storageToCalendarDateKL,
 } from '@/lib/datetime'
 import { TUJUAN_LAIN_LAIN } from '@/lib/constants'
 
@@ -22,7 +18,6 @@ export function Step3Butiran() {
   const setTujuan = useWizardStore((s) => s.setTujuan)
   const tujuanLainTeks = useWizardStore((s) => s.tujuan_lain_teks)
   const setTujuanLainTeks = useWizardStore((s) => s.setTujuanLainTeks)
-  const tarikhPinjaman = useWizardStore((s) => s.tarikh_pinjaman)
   const tarikhPulangan = useWizardStore((s) => s.tarikh_pemulangan_dijangka)
   const setTarikhPulangan = useWizardStore((s) => s.setTarikhPemulanganDijangka)
 
@@ -35,12 +30,6 @@ export function Step3Butiran() {
     queryKey: ['pinjam_tujuan_pinjaman'],
     queryFn: fetchTujuanList,
   })
-
-  const todayStr = todayDateStringKL()
-  const returnDateInvalid =
-    Boolean(tarikhPinjaman) &&
-    Boolean(tarikhPulangan) &&
-    !isOnOrAfterDateStringKL(tarikhPulangan as string, tarikhPinjaman as string)
 
   const isReturnDayDisabled = (date: Date) => {
     const dayStr = calendarDateToStorageKL(date)
@@ -104,19 +93,8 @@ export function Step3Butiran() {
           value={tarikhPulangan}
           onChange={setTarikhPulangan}
           placeholder="Pilih tarikh pemulangan"
-          minDate={
-            tarikhPinjaman
-              ? storageToCalendarDateKL(tarikhPinjaman)
-              : storageToCalendarDateKL(todayStr)
-          }
           disabledDays={isReturnDayDisabled}
         />
-        {returnDateInvalid && (
-          <p className="flex items-center gap-1.5 text-xs font-medium text-destructive">
-            <AlertCircle className="size-3.5" />
-            Tarikh pemulangan mestilah sama atau selepas tarikh pinjaman.
-          </p>
-        )}
       </div>
     </div>
   )
