@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+﻿import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Plus, FileSpreadsheet, Pencil, Trash2, UploadCloud } from 'lucide-react'
@@ -180,7 +180,7 @@ export function GuruPage() {
 
       <div className="w-full sm:max-w-60">
         <Input
-          placeholder="Cari nama guru..."
+          
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -286,7 +286,7 @@ export function GuruPage() {
               id="nama-guru"
               value={addName}
               onChange={(e) => setAddName(e.target.value)}
-              placeholder="cth. Cikgu Ahmad bin Hassan"
+              
               required
             />
           </div>
@@ -451,3 +451,4 @@ export function GuruPage() {
     </div>
   )
 }
+

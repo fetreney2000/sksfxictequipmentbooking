@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -193,7 +193,6 @@ export function LaporanPage() {
               <DatePicker
                 value={dariTarikh}
                 onChange={setDariTarikh}
-                placeholder="Pilih tarikh mula"
               />
             </div>
             <div className="space-y-2">
@@ -201,7 +200,6 @@ export function LaporanPage() {
               <DatePicker
                 value={hinggaTarikh}
                 onChange={setHinggaTarikh}
-                placeholder="Pilih tarikh akhir"
                 minDate={dariTarikh ? storageToCalendarDateKL(dariTarikh) : undefined}
               />
             </div>
@@ -364,3 +362,4 @@ function BadgePeralatan({ jumlah }: { jumlah: number }) {
     </span>
   )
 }
+

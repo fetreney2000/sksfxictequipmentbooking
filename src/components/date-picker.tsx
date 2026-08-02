@@ -28,7 +28,7 @@ export interface DatePickerProps {
 export function DatePicker({
   value,
   onChange,
-  placeholder = 'Pilih tarikh',
+  placeholder = '',
   disabled,
   minDate,
   maxDate,

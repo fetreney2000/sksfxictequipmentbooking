@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
@@ -160,7 +160,7 @@ function PeralatanFormDialog({
               onValueChange={(v) => setFormPartial({ kategori_id: v })}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih kategori" />
+                <SelectValue  />
               </SelectTrigger>
               <SelectContent>
                 {kategoriList.map((k) => (
@@ -178,7 +178,7 @@ function PeralatanFormDialog({
               onValueChange={(v) => setFormPartial({ jenama_id: v })}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih jenama" />
+                <SelectValue  />
               </SelectTrigger>
               <SelectContent>
                 {jenamaByKategori.length === 0 ? (
@@ -201,7 +201,7 @@ function PeralatanFormDialog({
               id="nombor-siri"
               value={form.nombor_siri}
               onChange={(e) => setFormPartial({ nombor_siri: e.target.value })}
-              placeholder="cth. LAP-DEL-001"
+              
               required
             />
           </div>
@@ -211,7 +211,7 @@ function PeralatanFormDialog({
               id="nama-peralatan"
               value={form.nama_peralatan}
               onChange={(e) => setFormPartial({ nama_peralatan: e.target.value })}
-              placeholder="cth. Dell Latitude 3420"
+              
             />
           </div>
           <div className="space-y-2">
@@ -431,7 +431,7 @@ export function PeralatanPage() {
         <div>
           <h1 className="text-xl font-bold">Pengurusan Peralatan ICT</h1>
           <p className="text-sm text-muted-foreground">
-            Inventori peralatan ICT sekolah — pendaftaran, kategori, jenama dan pelupusan.
+            Inventori peralatan ICT sekolah â€” pendaftaran, kategori, jenama dan pelupusan.
           </p>
         </div>
         {tab === 'peralatan' && (
@@ -481,7 +481,7 @@ export function PeralatanPage() {
         <>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Input
-              placeholder="Cari nombor siri, nama, kategori atau jenama..."
+              
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full sm:max-w-72"
@@ -839,7 +839,7 @@ export function PeralatanPage() {
               id="nama-kategori"
               value={kategoriName}
               onChange={(e) => setKategoriName(e.target.value)}
-              placeholder="cth. Laptop"
+              
               required
             />
           </div>
@@ -876,7 +876,7 @@ export function PeralatanPage() {
                 onValueChange={(v) => setJenamaForm({ ...jenamaForm, kategori_id: v })}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pilih kategori" />
+                  <SelectValue  />
                 </SelectTrigger>
                 <SelectContent>
                   {(kategoriList ?? []).map((k) => (
@@ -893,7 +893,7 @@ export function PeralatanPage() {
                 id="nama-jenama"
                 value={jenamaForm.nama_jenama}
                 onChange={(e) => setJenamaForm({ ...jenamaForm, nama_jenama: e.target.value })}
-                placeholder="cth. Dell"
+                
                 required
               />
             </div>
@@ -914,3 +914,4 @@ export function PeralatanPage() {
     </div>
   )
 }
+

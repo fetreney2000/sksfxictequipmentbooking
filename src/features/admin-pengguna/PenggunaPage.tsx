@@ -303,7 +303,7 @@ export function PenggunaPage() {
                 onValueChange={(v) => setAddForm({ ...addForm, role: v as UserRole })}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pilih peranan" />
+                  <SelectValue  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="admin">Admin</SelectItem>
@@ -368,7 +368,7 @@ export function PenggunaPage() {
                 value={editForm.password}
                 onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
                 autoComplete="new-password"
-                placeholder="Kosongkan jika tidak mahu menukar"
+                
               />
               {editForm.password && editForm.password.length < 6 && (
                 <p className="text-xs text-destructive">Kata laluan mestilah sekurang-kurangnya 6 aksara.</p>
@@ -423,4 +423,5 @@ export function PenggunaPage() {
     </div>
   )
 }
+
 

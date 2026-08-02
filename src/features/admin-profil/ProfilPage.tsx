@@ -113,7 +113,7 @@ export function ProfilPage() {
                 id="profil-new"
                 type="password"
                 autoComplete="new-password"
-                placeholder="Kosongkan jika tidak mahu menukar"
+                
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
@@ -129,7 +129,7 @@ export function ProfilPage() {
                 id="profil-confirm"
                 type="password"
                 autoComplete="new-password"
-                placeholder="Taip semula kata laluan baharu"
+                
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
@@ -151,4 +151,5 @@ export function ProfilPage() {
     </div>
   )
 }
+
 

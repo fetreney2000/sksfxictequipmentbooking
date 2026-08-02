@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import {
   flexRender,
   getCoreRowModel,
@@ -155,7 +155,7 @@ export function PermohonanPage() {
           </TabsList>
         </Tabs>
         <Input
-          placeholder="Cari nama guru..."
+          
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full sm:max-w-60"
@@ -254,3 +254,4 @@ export function PermohonanPage() {
     </div>
   )
 }
+

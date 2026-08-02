@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -115,7 +115,7 @@ function TolakDialog({
           <Label htmlFor="tolak-reason">Sebab Penolakan</Label>
           <Textarea
             id="tolak-reason"
-            placeholder="Nyatakan sebab penolakan..."
+            
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             required
@@ -221,7 +221,7 @@ function KemaskiniDialog({
               options={(tujuanList ?? []).map((t) => ({ value: t.id, label: t.tujuan }))}
               value={tujuanId}
               onChange={setTujuanId}
-              placeholder="Pilih tujuan"
+              
             />
           </div>
           {showLainLain && (
@@ -230,7 +230,7 @@ function KemaskiniDialog({
               <Textarea
                 value={tujuanLain}
                 onChange={(e) => setTujuanLain(e.target.value)}
-                placeholder="Sila nyatakan tujuan anda..."
+                
               />
             </div>
           )}
@@ -598,7 +598,7 @@ export function PermohonanDetailPage() {
                         {item.peralatan.nama_peralatan ?? item.peralatan.nombor_siri}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {item.peralatan.kategori.nama_kategori} · {item.peralatan.jenama.nama_jenama} ·{' '}
+                        {item.peralatan.kategori.nama_kategori} Â· {item.peralatan.jenama.nama_jenama} Â·{' '}
                         {item.peralatan.nombor_siri}
                       </p>
                     </div>
@@ -628,3 +628,4 @@ export function PermohonanDetailPage() {
     </div>
   )
 }
+
