@@ -1,7 +1,7 @@
 ﻿import { useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Plus, FileSpreadsheet, Pencil, Trash2, UploadCloud } from 'lucide-react'
+import { Plus, FileSpreadsheet, Pencil, Trash2, UploadCloud, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -178,11 +178,12 @@ export function GuruPage() {
         </div>
       </div>
 
-      <div className="w-full sm:max-w-60">
+      <div className="relative w-full sm:max-w-60">
+        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-8"
         />
       </div>
 

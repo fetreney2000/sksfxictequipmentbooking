@@ -15,6 +15,7 @@ import {
   ChevronUp,
   ChevronDown,
   Eye,
+  Search,
 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -154,12 +155,14 @@ export function PermohonanPage() {
             ))}
           </TabsList>
         </Tabs>
-        <Input
-          
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:max-w-60"
-        />
+        <div className="relative w-full sm:max-w-60">
+          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8"
+          />
+        </div>
       </div>
 
       <div className="rounded-lg border bg-card">

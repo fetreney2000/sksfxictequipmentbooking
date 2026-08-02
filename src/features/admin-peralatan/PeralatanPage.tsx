@@ -8,6 +8,7 @@ import {
   PackagePlus,
   Power,
   PackageX,
+  Search,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -480,12 +481,14 @@ export function PeralatanPage() {
       {tab === 'peralatan' && (
         <>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Input
-              
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full sm:max-w-72"
-            />
+            <div className="relative w-full sm:max-w-72">
+              <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-8"
+              />
+            </div>
             <Select
               value={statusFilter}
               onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
