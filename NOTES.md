@@ -5,6 +5,38 @@ building the app where the build prompt was ambiguous. Review before production 
 
 ## Assumptions
 
+## Visual design system
+
+The visual redesign is presentation-only and is implemented through `src/index.css`,
+shared UI primitives, and the public/admin shells. Existing routes, state, API calls,
+validation, accessibility attributes, and PWA behavior are unchanged.
+
+- **Palette:** warm slate canvas (`--background`), white/card surfaces, deep ink text,
+  teal primary action, and semantic red/green accents. The existing `.dark` theme
+  contract remains supported with a darker navy/teal palette.
+- **Typography:** system UI sans with tighter display tracking, 12px metadata,
+  14px body copy, 16px card headings, and 24px page headings.
+- **Spacing:** Tailwind spacing values follow a 4px base and 8px rhythm, with larger
+  28px/36px page gutters for breathing room.
+- **Shape:** 12px default radius, 16px primary surfaces, rounded 8px controls, and
+  minimum 36px interactive controls for touch usability.
+- **Elevation:** `--shadow-xs`, `--shadow-sm`, and `--shadow-md` provide restrained
+  hierarchy for cards, buttons, and login/public hero surfaces.
+- **Motion:** shared interactive transitions use approximately 180ms ease-out; focus
+  rings remain visible and `prefers-reduced-motion` is respected.
+
+### Before / after notes
+
+- **Public borrowing:** moved from a flat blue header and compact form card to a calm
+  branded surface with layered background, stronger step hierarchy, and more generous
+  form spacing while retaining the same wizard controls and validation.
+- **Admin shell:** upgraded sidebar/header contrast, active navigation treatment,
+  mobile safe-area bottom navigation, and page gutters without changing route links.
+- **Dashboard:** strengthened page introduction, metric emphasis, surface elevation,
+  and content grouping; all query states and links are unchanged.
+- **Login:** added a focused branded backdrop, elevated form surface, and improved
+  field/control proportions while preserving authentication behavior and errors.
+
 1. **Non-borrowing days (Step 1).** Saturday and Sunday are treated as
    non-borrowing days for a school and are disabled in the "Pilih Tarikh Pinjaman"
    calendar. The "Tarikh Pemulangan (Dijangka)" picker also disables weekends.

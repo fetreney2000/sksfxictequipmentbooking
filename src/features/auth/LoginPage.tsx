@@ -40,13 +40,14 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_oklch,var(--primary)_16%,transparent),transparent_48%)]" />
+      <div className="relative w-full max-w-sm">
+        <div className="mb-7 text-center">
+          <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md">
             <Lock className="size-7" />
           </div>
-          <h1 className="text-lg font-bold">{SEKOLAH_NAMA}</h1>
+          <h1 className="text-xl font-bold tracking-tight">{SEKOLAH_NAMA}</h1>
           <p className="text-sm text-muted-foreground">{SEKOLAH_SUBTITLE}</p>
         </div>
 
@@ -57,13 +58,13 @@ export function LoginPage() {
           </div>
         )}
 
-        <Card>
+         <Card className="shadow-md">
           <CardHeader>
             <CardTitle className="text-base">Log Masuk Pentadbir</CardTitle>
             <CardDescription>Masukkan nama pengguna dan kata laluan anda.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-1.5">
                 <Label htmlFor="username">Nama Pengguna</Label>
                 <div className="relative">

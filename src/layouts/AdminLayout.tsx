@@ -36,7 +36,7 @@ const NAV_ITEMS: NavItem[] = [
 
 function MobileBottomNav({ items }: { items: NavItem[] }) {
   return (
-    <nav className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)]">
+    <nav className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-card/95 shadow-[0_-8px_24px_rgb(16_24_40_/_0.06)] backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
       <div className="flex">
         {items.map((item) => (
           <NavLink
@@ -45,7 +45,7 @@ function MobileBottomNav({ items }: { items: NavItem[] }) {
             end={item.to === '/admin'}
             className={({ isActive }) =>
               cn(
-                'flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition-colors',
+                'flex min-h-16 flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-semibold transition-colors',
                 isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
               )
             }
@@ -61,9 +61,9 @@ function MobileBottomNav({ items }: { items: NavItem[] }) {
 
 function Sidebar({ items }: { items: NavItem[] }) {
   return (
-    <aside className="no-print fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r bg-card md:flex">
-      <div className="flex items-center gap-3 border-b px-5 py-4">
-        <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+    <aside className="no-print fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-sidebar md:flex">
+      <div className="flex items-center gap-3 border-b px-5 py-5">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
           <MonitorSmartphone className="size-5" />
         </div>
         <div className="min-w-0">
@@ -71,7 +71,7 @@ function Sidebar({ items }: { items: NavItem[] }) {
           <p className="text-xs text-muted-foreground">{SEKOLAH_SUBTITLE}</p>
         </div>
       </div>
-      <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {items.map((item) => (
           <NavLink
             key={item.to}
@@ -79,7 +79,7 @@ function Sidebar({ items }: { items: NavItem[] }) {
             end={item.to === '/admin'}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all',
                 isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
@@ -113,10 +113,10 @@ export function AdminLayout() {
 
       <div className={cn('flex min-h-screen flex-col', !isMobile && 'md:pl-60')}>
         <header className="no-print sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-          <div className="flex h-14 items-center justify-between gap-4 px-4">
+          <div className="flex h-16 items-center justify-between gap-4 px-4 md:px-8">
             <div className="flex items-center gap-2">
               {isMobile && (
-                <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
                   <MonitorSmartphone className="size-4" />
                 </div>
               )}
@@ -131,14 +131,14 @@ export function AdminLayout() {
               <Link
                 to="/pinjam"
                 title="Permohonan Pinjaman Peralatan ICT"
-                className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 <ExternalLink className="size-4" />
                 <span className="hidden sm:inline">Permohonan Pinjaman</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 <LogOut className="size-4" />
                 <span className="hidden sm:inline">Log Keluar</span>
@@ -147,7 +147,7 @@ export function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-6 pb-24 md:px-6 md:pb-6">
+        <main className="flex-1 px-4 py-7 pb-24 md:px-8 md:py-9 md:pb-9">
           <Outlet />
         </main>
       </div>

@@ -80,9 +80,10 @@ export function PublicWizardPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className="mb-6 text-center">
-        <h1 className="text-xl font-bold text-foreground sm:text-2xl">Permohonan Pinjaman Peralatan ICT</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <div className="mb-8 text-center">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-primary">Sistem Pinjaman ICT</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Permohonan Pinjaman Peralatan ICT</h1>
+        <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
           Sila lengkapkan maklumat berikut untuk membuat permohonan pinjaman.
         </p>
       </div>
@@ -98,14 +99,14 @@ export function PublicWizardPage() {
               <div className="flex w-full items-center">
                 <div
                   className={cn(
-                    'h-1 flex-1 rounded-full',
+                    'h-1.5 flex-1 rounded-full transition-colors',
                     done || active ? 'bg-primary' : 'bg-muted',
                     i === 0 && 'invisible',
                   )}
                 />
                 <div
                   className={cn(
-                    'flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors',
+                    'flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold shadow-xs transition-all',
                     active
                       ? 'bg-primary text-primary-foreground'
                       : done
@@ -136,13 +137,13 @@ export function PublicWizardPage() {
         })}
       </ol>
 
-      <div className="rounded-xl border bg-card p-5 shadow-sm sm:p-6">
+       <div className="rounded-2xl border bg-card p-5 shadow-md sm:p-7">
         {step === 1 && <Step1Tarikh />}
         {step === 2 && <Step2Peralatan />}
         {step === 3 && <Step3Butiran />}
         {step === 4 && <Step4Semakan />}
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
           <div className="flex items-center gap-2">
             <Button
               type="button"
