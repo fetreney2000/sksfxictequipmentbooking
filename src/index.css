@@ -122,6 +122,19 @@
   button, a, input, select, textarea {
     -webkit-tap-highlight-color: transparent;
   }
+  button:not(:disabled),
+  a,
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [data-slot="checkbox"]:not([data-disabled]),
+  [data-slot="select-trigger"]:not([data-disabled]) {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"],
+  [data-disabled] {
+    cursor: not-allowed;
+  }
   ::selection {
     background: color-mix(in oklch, var(--primary), transparent 78%);
   }
