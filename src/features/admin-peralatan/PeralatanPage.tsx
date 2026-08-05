@@ -271,11 +271,13 @@ export function PeralatanPage() {
     queryFn: fetchAllPeralatan,
   })
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ['pinjam_peralatan'] })
-    queryClient.invalidateQueries({ queryKey: ['pinjam_jenama'] })
-    queryClient.invalidateQueries({ queryKey: ['pinjam_kategori_peralatan'] })
-    queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+  const invalidate = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['pinjam_peralatan'] }),
+      queryClient.invalidateQueries({ queryKey: ['pinjam_jenama'] }),
+      queryClient.invalidateQueries({ queryKey: ['pinjam_kategori_peralatan'] }),
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] }),
+    ])
   }
 
   /* ---- Peralatan dialogs ---- */
@@ -300,14 +302,14 @@ export function PeralatanPage() {
         await createPeralatan({ ...form, nama_peralatan })
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(
         peralatanDialog.editId
           ? 'Peralatan telah dikemas kini.'
           : 'Peralatan baharu telah didaftarkan.',
       )
       setPeralatanDialog({ open: false, editId: null, initial: null })
-      invalidate()
+      await invalidate()
     },
     onError: (err) => {
       toast.error(
@@ -321,18 +323,18 @@ export function PeralatanPage() {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: PeralatanStatus }) =>
       updatePeralatan(id, { status }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Status peralatan telah dikemas kini.')
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal mengemas kini status.'),
   })
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deletePeralatan(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Peralatan telah dipadam.')
-      invalidate()
+      await invalidate()
     },
     onError: () =>
       toast.error(
@@ -353,21 +355,21 @@ export function PeralatanPage() {
         await createKategori(kategoriName.trim())
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(kategoriEdit ? 'Kategori telah dikemas kini.' : 'Kategori baharu telah ditambah.')
       setKategoriOpen(false)
       setKategoriName('')
       setKategoriEdit(null)
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal menyimpan kategori. Nama kategori mungkin sudah wujud.'),
   })
 
   const kategoriDeleteMutation = useMutation({
     mutationFn: (id: string) => deleteKategori(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Kategori telah dipadam.')
-      invalidate()
+      await invalidate()
     },
     onError: () =>
       toast.error('Gagal memadam kategori. Kategori mungkin masih digunakan.'),
@@ -386,21 +388,21 @@ export function PeralatanPage() {
         await createJenama(jenamaForm.kategori_id, jenamaForm.nama_jenama.trim())
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(jenamaEdit ? 'Jenama telah dikemas kini.' : 'Jenama baharu telah ditambah.')
       setJenamaOpen(false)
       setJenamaForm({ kategori_id: '', nama_jenama: '' })
       setJenamaEdit(null)
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal menyimpan jenama. Jenama mungkin sudah wujud dalam kategori ini.'),
   })
 
   const jenamaDeleteMutation = useMutation({
     mutationFn: (id: string) => deleteJenama(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Jenama telah dipadam.')
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal memadam jenama. Jenama mungkin masih digunakan.'),
   })

@@ -268,62 +268,66 @@ export function PermohonanDetailPage() {
     enabled: Boolean(id),
   })
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ['pinjam_permohonan'] })
-    queryClient.invalidateQueries({ queryKey: ['pinjam_peralatan'] })
-    queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+  const invalidate = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['pinjam_permohonan'] }),
+      queryClient.invalidateQueries({ queryKey: ['pinjam_permohonan_item'] }),
+      queryClient.invalidateQueries({ queryKey: ['pinjam_peralatan'] }),
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] }),
+    ])
   }
 
   const approveMutation = useMutation({
     mutationFn: (finalPeralatanIds: string[]) =>
       approvePermohonanSelection(id as string, user?.id ?? '', finalPeralatanIds),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan telah diluluskan.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal meluluskan.'),
   })
 
   const rejectMutation = useMutation({
     mutationFn: (reason: string) => rejectPermohonan(id as string, reason),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan telah ditolak.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal menolak.'),
   })
 
   const selesaiMutation = useMutation({
     mutationFn: () => markPermohonanSelesai(id as string, todayDateStringKL()),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan ditandakan sebagai selesai.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal mengemas kini.'),
   })
 
   const undoSelesaiMutation = useMutation({
     mutationFn: () => undoSelesaiPermohonan(id as string),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan dikembalikan kepada status diluluskan.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal mengemas kini.'),
   })
 
   const batalMutation = useMutation({
     mutationFn: () => cancelPermohonan(id as string),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan telah dibatalkan.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal membatalkan.'),
   })
 
   const padamMutation = useMutation({
     mutationFn: () => deletePermohonan(id as string),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan telah dipadam.')
+      await invalidate()
       navigate('/admin/permohonan')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal memadam.'),
@@ -335,9 +339,9 @@ export function PermohonanDetailPage() {
       tujuan_id?: string
       tujuan_lain_teks?: string | null
     }) => updatePermohonan(id as string, patch),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Permohonan telah dikemas kini.')
-      invalidate()
+      await invalidate()
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Gagal mengemas kini.'),
   })

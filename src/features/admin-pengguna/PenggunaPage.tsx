@@ -82,11 +82,11 @@ export function PenggunaPage() {
         password: addForm.password,
         role: addForm.role,
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Pengguna baru telah ditambah.')
       setAddOpen(false)
       setAddForm({ username: '', full_name: '', password: '', role: 'admin' })
-      invalidate()
+      await invalidate()
     },
     onError: (err) =>
       toast.error(
@@ -105,10 +105,10 @@ export function PenggunaPage() {
         is_active: editForm.is_active,
         password: editForm.password || undefined,
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Maklumat pengguna telah dikemas kini.')
       setEditTarget(null)
-      invalidate()
+      await invalidate()
     },
     onError: (err) =>
       toast.error(
@@ -120,9 +120,9 @@ export function PenggunaPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteUser(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Pengguna telah dipadam.')
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal memadam pengguna.'),
   })

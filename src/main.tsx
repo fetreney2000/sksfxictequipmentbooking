@@ -12,7 +12,9 @@ registerSW({ immediate: true })
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
+      // Mutations explicitly invalidate and await fresh data. A short stale
+      // window also prevents navigating back to a list from showing old data.
+      staleTime: 0,
       retry: 1,
       refetchOnWindowFocus: false,
     },

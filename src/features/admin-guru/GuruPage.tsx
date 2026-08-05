@@ -68,18 +68,20 @@ export function GuruPage() {
     queryFn: fetchAllGuru,
   })
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ['pinjam_guru'] })
-    queryClient.invalidateQueries({ queryKey: ['pinjam_guru', 'active'] })
+  const invalidate = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['pinjam_guru'] }),
+      queryClient.invalidateQueries({ queryKey: ['pinjam_guru', 'active'] }),
+    ])
   }
 
   const addMutation = useMutation({
     mutationFn: () => createGuru(addName.trim()),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Guru baru telah ditambah.')
       setAddOpen(false)
       setAddName('')
-      invalidate()
+      await invalidate()
     },
     onError: (err) =>
       toast.error(err instanceof Error && err.message.includes('duplicate')
@@ -89,10 +91,10 @@ export function GuruPage() {
 
   const editMutation = useMutation({
     mutationFn: () => updateGuru(editTarget?.id ?? '', { nama_guru: editName.trim() }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Maklumat guru telah dikemas kini.')
       setEditTarget(null)
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal mengemas kini guru.'),
   })
@@ -100,18 +102,18 @@ export function GuruPage() {
   const toggleActiveMutation = useMutation({
     mutationFn: ({ id, is_active }: { id: string; is_active: boolean }) =>
       updateGuru(id, { is_active }),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Status guru telah dikemas kini.')
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal mengemas kini status.'),
   })
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteGuru(id),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Guru telah dipadam.')
-      invalidate()
+      await invalidate()
     },
     onError: () => toast.error('Gagal memadam guru. Mungkin nama guru telah digunakan dalam permohonan.'),
   })
@@ -149,7 +151,7 @@ export function GuruPage() {
         errors: [],
       })
       setImportStep('result')
-      invalidate()
+       await invalidate()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Gagal membaca fail.')
     } finally {
