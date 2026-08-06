@@ -388,7 +388,7 @@ export function PermohonanDetailPage() {
       <div className="no-print print:hidden">
         <button
           onClick={() => navigate('/admin/permohonan')}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+          className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground sm:min-h-0"
         >
           <ArrowLeft className="size-4" /> Kembali ke Senarai
         </button>
@@ -407,7 +407,7 @@ export function PermohonanDetailPage() {
             </span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
           {showActions && (
             <>
               <Button onClick={() => setApproveOpen(true)}>
@@ -520,16 +520,16 @@ export function PermohonanDetailPage() {
         </div>
       </div>
 
-      <div className="no-print print:hidden flex flex-wrap gap-2">
-        <Button variant="outline" onClick={() => window.print()}>
+      <div className="no-print print:hidden grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+        <Button variant="outline" className="w-full sm:w-auto" onClick={() => window.print()}>
           <Printer className="size-4" />
           Cetak
         </Button>
-        <Button variant="outline" onClick={handleDownloadPdf}>
+        <Button variant="outline" className="w-full sm:w-auto" onClick={handleDownloadPdf}>
           <FileDown className="size-4" />
           Muat Turun PDF
         </Button>
-        <Button variant="outline" onClick={handleDownloadDocx}>
+        <Button variant="outline" className="w-full sm:w-auto" onClick={handleDownloadDocx}>
           <FileText className="size-4" />
           Muat Turun Word
         </Button>
@@ -541,21 +541,21 @@ export function PermohonanDetailPage() {
             <CardTitle className="text-sm font-semibold">Butiran Permohonan</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Nama Guru</span>
               <span className="font-medium">{permohonan.guru?.nama_guru ?? '-'}</span>
             </div>
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Tarikh Pinjaman</span>
               <span className="font-medium">{formatDateStringLongKL(permohonan.tarikh_pinjaman)}</span>
             </div>
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Tarikh Pemulangan (Dijangka)</span>
               <span className="font-medium">
                 {formatDateStringLongKL(permohonan.tarikh_pemulangan_dijangka)}
               </span>
             </div>
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Tarikh Pemulangan (Sebenar)</span>
               <span className="font-medium">
                 {permohonan.tarikh_pemulangan_sebenar
@@ -563,22 +563,22 @@ export function PermohonanDetailPage() {
                   : '-'}
               </span>
             </div>
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Tujuan Pinjaman</span>
               <span className="font-medium">{tujuanResolved}</span>
             </div>
-            <div className="flex justify-between gap-4 border-b py-1.5">
+            <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
               <span className="text-muted-foreground">Status</span>
               <StatusPermohonanBadge status={permohonan.status} />
             </div>
             {permohonan.catatan_admin && (
-              <div className="flex justify-between gap-4 border-b py-1.5">
+              <div className="flex flex-col gap-1 border-b py-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-muted-foreground">Catatan Pentadbir</span>
                 <span className="font-medium">{permohonan.catatan_admin}</span>
               </div>
             )}
             {permohonan.diluluskan_pada && (
-              <div className="flex justify-between gap-4 py-1.5">
+              <div className="flex flex-col gap-1 py-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-muted-foreground">Diluluskan Pada</span>
                 <span className="font-medium">{toDateDisplayKL(permohonan.diluluskan_pada)}</span>
               </div>

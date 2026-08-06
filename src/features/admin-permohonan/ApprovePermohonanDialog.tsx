@@ -270,19 +270,21 @@ export function ApprovePermohonanDialog({
                         )}
                         {row.approved && (
                           <div className="flex gap-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setPickerFor(index)}
+                             <Button
+                               variant="outline"
+                               size="sm"
+                               className="min-h-11 sm:min-h-7"
+                               onClick={() => setPickerFor(index)}
                             >
                               <ArrowLeftRight className="size-3.5" />
                               Ganti
                             </Button>
                             {row.replacement && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => updateRow(index, { replacement: null })}
+                               <Button
+                                 variant="ghost"
+                                 size="sm"
+                                 className="min-h-11 sm:min-h-7"
+                                 onClick={() => updateRow(index, { replacement: null })}
                               >
                                 <RefreshCcw className="size-3.5" />
                               </Button>

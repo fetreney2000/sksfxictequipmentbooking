@@ -146,7 +146,7 @@ export function DashboardPage() {
                     </div>
                     <Link
                       to={`/admin/permohonan/${p.id}`}
-                      className="flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                       className="flex min-h-11 shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline sm:min-h-0"
                     >
                       Buka <ChevronRight className="size-3.5" />
                     </Link>
@@ -194,7 +194,7 @@ export function DashboardPage() {
                     </div>
                     <Link
                       to={`/admin/permohonan/${p.id}`}
-                      className="flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                       className="flex min-h-11 shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline sm:min-h-0"
                     >
                       Buka <ChevronRight className="size-3.5" />
                     </Link>

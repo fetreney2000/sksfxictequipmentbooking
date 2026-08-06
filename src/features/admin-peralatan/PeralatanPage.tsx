@@ -488,6 +488,7 @@ export function PeralatanPage() {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari peralatan, siri, kategori"
                 className="w-full pl-8"
               />
             </div>
@@ -521,7 +522,8 @@ export function PeralatanPage() {
                 Tiada peralatan ditemui.
               </div>
             ) : (
-              <Table>
+              <>
+              <Table className="hidden sm:table">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nombor Siri</TableHead>
@@ -656,6 +658,126 @@ export function PeralatanPage() {
                   })}
                 </TableBody>
               </Table>
+              <div className="space-y-3 p-3 sm:hidden">
+                {filteredPeralatan.map((peralatan) => {
+                  const isBorrowed = peralatan.status === 'dipinjam'
+                  const isRetired = peralatan.status === 'tidak_aktif'
+                  return (
+                    <article key={peralatan.id} className="rounded-xl border bg-background p-4 shadow-xs">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h2 className="truncate text-sm font-semibold">
+                            {peralatan.nama_peralatan ?? peralatan.nombor_siri}
+                          </h2>
+                          <p className="mt-1 font-mono text-xs text-muted-foreground">
+                            {peralatan.nombor_siri}
+                          </p>
+                        </div>
+                        <StatusPeralatanBadge status={peralatan.status} />
+                      </div>
+                      <dl className="mt-3 grid grid-cols-2 gap-3 border-t pt-3 text-xs">
+                        <div>
+                          <dt className="text-muted-foreground">Kategori</dt>
+                          <dd className="mt-0.5 font-medium">{peralatan.kategori?.nama_kategori ?? '-'}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">Jenama</dt>
+                          <dd className="mt-0.5 font-medium">{peralatan.jenama?.nama_jenama ?? '-'}</dd>
+                        </div>
+                      </dl>
+                      <div className="mt-4 grid gap-2">
+                        <Button
+                          variant="outline"
+                          className="min-h-11 w-full"
+                          onClick={() =>
+                            setPeralatanDialog({
+                              open: true,
+                              editId: peralatan.id,
+                              initial: {
+                                kategori_id: peralatan.kategori_id,
+                                jenama_id: peralatan.jenama_id,
+                                nombor_siri: peralatan.nombor_siri,
+                                nama_peralatan: peralatan.nama_peralatan ?? '',
+                                status: peralatan.status,
+                              },
+                            })
+                          }
+                        >
+                          <Pencil className="size-3.5" />
+                          Sunting
+                        </Button>
+                        {!isRetired ? (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="min-h-11 w-full text-destructive"
+                                disabled={isBorrowed}
+                                title={isBorrowed ? 'Peralatan sedang dipinjam' : 'Lupus peralatan'}
+                              >
+                                <PackageX className="size-3.5" />
+                                {isBorrowed ? 'Sedang Dipinjam' : 'Lupus Peralatan'}
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Lupus Peralatan?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Peralatan "{peralatan.nama_peralatan ?? peralatan.nombor_siri}" akan ditandakan sebagai tidak aktif.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="bg-destructive text-white hover:bg-destructive/90"
+                                  onClick={() => statusMutation.mutate({ id: peralatan.id, status: 'tidak_aktif' })}
+                                >
+                                  Ya, Lupus
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            className="min-h-11 w-full"
+                            onClick={() => statusMutation.mutate({ id: peralatan.id, status: 'tersedia' })}
+                          >
+                            <Power className="size-3.5" />
+                            Aktifkan Peralatan
+                          </Button>
+                        )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" className="min-h-11 w-full text-destructive">
+                              <Trash2 className="size-3.5" />
+                              Padam
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Padam Peralatan?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Rekod peralatan "{peralatan.nama_peralatan ?? peralatan.nombor_siri}" akan dipadam secara kekal.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-destructive text-white hover:bg-destructive/90"
+                                onClick={() => deleteMutation.mutate(peralatan.id)}
+                              >
+                                Ya, Padam
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+              </>
             )}
           </div>
         </>
@@ -673,8 +795,9 @@ export function PeralatanPage() {
             <div className="p-10 text-center text-sm text-muted-foreground">
               Tiada kategori. Sila tambah kategori baharu.
             </div>
-          ) : (
-            <Table>
+           ) : (
+             <>
+             <Table className="hidden sm:table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Nama Kategori</TableHead>
@@ -731,6 +854,52 @@ export function PeralatanPage() {
                 ))}
               </TableBody>
             </Table>
+            <div className="space-y-3 p-3 sm:hidden">
+              {kategoriList.map((kategori) => (
+                <article key={kategori.id} className="flex items-center justify-between gap-3 rounded-xl border bg-background p-4">
+                  <p className="min-w-0 truncate text-sm font-semibold">{kategori.nama_kategori}</p>
+                  <div className="flex shrink-0 gap-2">
+                    <Button
+                      variant="outline"
+                      className="min-h-11 px-3 sm:min-h-7"
+                      aria-label={`Sunting ${kategori.nama_kategori}`}
+                      onClick={() => {
+                        setKategoriEdit({ id: kategori.id })
+                        setKategoriName(kategori.nama_kategori)
+                        setKategoriOpen(true)
+                      }}
+                    >
+                      <Pencil className="size-3.5" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" className="min-h-11 px-3 text-destructive sm:min-h-7" aria-label={`Padam ${kategori.nama_kategori}`}>
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Padam Kategori?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Kategori "{kategori.nama_kategori}" akan dipadam. Kategori yang masih digunakan tidak boleh dipadam.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Batal</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-destructive text-white hover:bg-destructive/90"
+                            onClick={() => kategoriDeleteMutation.mutate(kategori.id)}
+                          >
+                            Ya, Padam
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </article>
+              ))}
+            </div>
+            </>
           )}
         </div>
       )}
@@ -747,8 +916,9 @@ export function PeralatanPage() {
             <div className="p-10 text-center text-sm text-muted-foreground">
               Tiada jenama. Sila tambah jenama baharu.
             </div>
-          ) : (
-            <Table>
+           ) : (
+             <>
+             <Table className="hidden sm:table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Nama Jenama</TableHead>
@@ -810,6 +980,57 @@ export function PeralatanPage() {
                 ))}
               </TableBody>
             </Table>
+            <div className="space-y-3 p-3 sm:hidden">
+              {jenamaList.map((jenama) => (
+                <article key={jenama.id} className="rounded-xl border bg-background p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">{jenama.nama_jenama}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{jenama.kategori?.nama_kategori ?? '-'}</p>
+                    </div>
+                    <div className="flex shrink-0 gap-2">
+                      <Button
+                        variant="outline"
+                        className="min-h-11 px-3 sm:min-h-7"
+                        aria-label={`Sunting ${jenama.nama_jenama}`}
+                        onClick={() => {
+                          setJenamaEdit({ id: jenama.id })
+                          setJenamaForm({ kategori_id: jenama.kategori_id, nama_jenama: jenama.nama_jenama })
+                          setJenamaOpen(true)
+                        }}
+                      >
+                        <Pencil className="size-3.5" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" className="min-h-11 px-3 text-destructive sm:min-h-7" aria-label={`Padam ${jenama.nama_jenama}`}>
+                            <Trash2 className="size-3.5" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Padam Jenama?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Jenama "{jenama.nama_jenama}" akan dipadam. Jenama yang masih digunakan tidak boleh dipadam.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="bg-destructive text-white hover:bg-destructive/90"
+                              onClick={() => jenamaDeleteMutation.mutate(jenama.id)}
+                            >
+                              Ya, Padam
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+            </>
           )}
         </div>
       )}

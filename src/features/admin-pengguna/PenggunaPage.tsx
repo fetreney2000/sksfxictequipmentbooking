@@ -168,6 +168,8 @@ export function PenggunaPage() {
             Tiada pengguna ditemui.
           </div>
         ) : (
+        <>
+        <div className="hidden sm:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -250,6 +252,76 @@ export function PenggunaPage() {
               ))}
             </TableBody>
           </Table>
+        </div>
+        <div className="space-y-3 p-3 sm:hidden">
+          {rows.map((user) => (
+            <article key={user.id} className="rounded-xl border bg-background p-4 shadow-xs">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="truncate font-mono text-sm font-semibold">{user.username}</h2>
+                  <p className="mt-1 truncate text-sm text-muted-foreground">{user.full_name}</p>
+                </div>
+                {isSelf(user.id) && <Badge variant="secondary">Anda</Badge>}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
+                <Badge variant={user.role === 'admin' ? 'default' : 'outline'}>
+                  {ROLE_LABEL[user.role]}
+                </Badge>
+                <Badge variant={user.is_active ? 'default' : 'outline'}>
+                  {user.is_active ? 'Aktif' : 'Tidak Aktif'}
+                </Badge>
+              </div>
+              <div className="mt-4 grid gap-2">
+                <Button
+                  variant="outline"
+                  className="min-h-11 w-full"
+                  onClick={() => handleEdit(user)}
+                >
+                  <Pencil className="size-3.5" />
+                  Sunting
+                </Button>
+                {isSelf(user.id) ? (
+                  <Button
+                    variant="outline"
+                    className="min-h-11 w-full"
+                    disabled
+                    title="Anda tidak boleh memadam akaun sendiri"
+                  >
+                    <Trash2 className="size-3.5" />
+                    Padam
+                  </Button>
+                ) : (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="min-h-11 w-full text-destructive">
+                        <Trash2 className="size-3.5" />
+                        Padam
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Padam Pengguna?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Akaun "{user.username}" akan dipadam secara kekal. Tindakan ini tidak boleh dibatalkan.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-white hover:bg-destructive/90"
+                          onClick={() => deleteMutation.mutate(user.id)}
+                        >
+                          Ya, Padam
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+        </>
         )}
       </div>
 

@@ -168,12 +168,12 @@ export function GuruPage() {
             Senarai nama guru yang boleh memilih nama dalam borang permohonan.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setImportStep('info')}>
+        <div className="grid w-full gap-2 sm:flex sm:w-auto sm:flex-wrap">
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => setImportStep('info')}>
             <FileSpreadsheet className="size-4" />
             Import Senarai Guru
           </Button>
-          <Button onClick={() => setAddOpen(true)}>
+          <Button className="w-full sm:w-auto" onClick={() => setAddOpen(true)}>
             <Plus className="size-4" />
             Tambah Guru
           </Button>
@@ -182,10 +182,11 @@ export function GuruPage() {
 
       <div className="relative w-full sm:max-w-60">
         <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-8"
+           <Input
+             value={search}
+             onChange={(e) => setSearch(e.target.value)}
+             placeholder="Cari nama guru"
+             className="w-full pl-8"
         />
       </div>
 
@@ -200,7 +201,9 @@ export function GuruPage() {
             Tiada guru ditemui.
           </div>
         ) : (
-          <Table>
+          <>
+          <div className="hidden sm:block">
+            <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Nama Guru</TableHead>
@@ -270,7 +273,68 @@ export function GuruPage() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+            </Table>
+          </div>
+          <div className="space-y-3 p-3 sm:hidden">
+            {filtered.map((guru) => (
+              <article key={guru.id} className="rounded-xl border bg-background p-4 shadow-xs">
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="min-w-0 truncate text-sm font-semibold">{guru.nama_guru}</h2>
+                  <Badge variant={guru.is_active ? 'default' : 'outline'}>
+                    {guru.is_active ? 'Aktif' : 'Tidak Aktif'}
+                  </Badge>
+                </div>
+                <div className="mt-4 grid grid-cols-1 gap-2 sm:flex sm:justify-end">
+                  <Button
+                    variant="outline"
+                    className="min-h-11 w-full sm:w-auto sm:min-h-7"
+                    onClick={() => {
+                      setEditTarget({ id: guru.id, nama_guru: guru.nama_guru })
+                      setEditName(guru.nama_guru)
+                    }}
+                  >
+                    <Pencil className="size-3.5" />
+                    Sunting
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="min-h-11 w-full sm:w-auto sm:min-h-7"
+                    onClick={() =>
+                      toggleActiveMutation.mutate({ id: guru.id, is_active: !guru.is_active })
+                    }
+                  >
+                    {guru.is_active ? 'Nyahaktifkan' : 'Aktifkan'}
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="min-h-11 w-full text-destructive sm:w-auto sm:min-h-7">
+                        <Trash2 className="size-3.5" />
+                        Padam
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Padam Guru?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Nama "{guru.nama_guru}" akan dipadam secara kekal. Tindakan ini tidak boleh dibatalkan.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-white hover:bg-destructive/90"
+                          onClick={() => deleteMutation.mutate(guru.id)}
+                        >
+                          Ya, Padam
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </article>
+            ))}
+          </div>
+          </>
         )}
       </div>
 

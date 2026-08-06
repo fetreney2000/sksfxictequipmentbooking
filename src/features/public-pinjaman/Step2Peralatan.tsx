@@ -96,7 +96,7 @@ export function Step2Peralatan() {
           <button
             type="button"
             onClick={() => setKategoriId(null)}
-            className="mb-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            className="mb-3 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-primary hover:underline sm:min-h-0"
           >
             <ArrowLeft className="size-4" /> Kembali ke Kategori
           </button>
@@ -143,7 +143,7 @@ export function Step2Peralatan() {
           <button
             type="button"
             onClick={() => setJenamaId(null)}
-            className="mb-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            className="mb-3 inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-primary hover:underline sm:min-h-0"
           >
             <ArrowLeft className="size-4" /> Kembali ke Jenama
           </button>
@@ -258,7 +258,7 @@ export function Step2Peralatan() {
                   <button
                     type="button"
                     onClick={() => removeItem(item.peralatan_id)}
-                    className="flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                     className="flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive sm:size-6"
                     aria-label={`Buang ${item.nombor_siri}`}
                   >
                     <span className="text-sm font-bold">X</span>

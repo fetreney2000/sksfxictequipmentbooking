@@ -147,9 +147,9 @@ export function PermohonanPage() {
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as PermohonanStatus | 'semua')}
         >
-          <TabsList className="w-full flex-wrap sm:w-auto">
+          <TabsList className="grid h-auto w-full grid-cols-2 sm:flex sm:w-auto">
             {FILTER_TABS.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
+              <TabsTrigger key={tab.value} value={tab.value} className="min-h-10 sm:min-h-0">
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -160,6 +160,7 @@ export function PermohonanPage() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari nama guru"
             className="w-full pl-8"
           />
         </div>
@@ -178,52 +179,102 @@ export function PermohonanPage() {
           </div>
         ) : (
           <>
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder ? null : (
-                          <button
-                            className={cn(
-                              'inline-flex items-center gap-1 font-medium',
-                              header.column.getCanSort() && 'cursor-pointer select-none',
-                            )}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanSort() &&
-                              (header.column.getIsSorted() === 'asc' ? (
-                                <ChevronUp className="size-3.5" />
-                              ) : header.column.getIsSorted() === 'desc' ? (
-                                <ChevronDown className="size-3.5" />
-                              ) : (
-                                <ChevronsUpDown className="size-3.5 text-muted-foreground" />
-                              ))}
-                          </button>
-                        )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow
+            <div className="hidden sm:block">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder ? null : (
+                            <button
+                              className={cn(
+                                'inline-flex items-center gap-1 font-medium',
+                                header.column.getCanSort() && 'cursor-pointer select-none',
+                              )}
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              {flexRender(header.column.columnDef.header, header.getContext())}
+                              {header.column.getCanSort() &&
+                                (header.column.getIsSorted() === 'asc' ? (
+                                  <ChevronUp className="size-3.5" />
+                                ) : header.column.getIsSorted() === 'desc' ? (
+                                  <ChevronDown className="size-3.5" />
+                                ) : (
+                                  <ChevronsUpDown className="size-3.5 text-muted-foreground" />
+                                ))}
+                            </button>
+                          )}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      className="cursor-pointer"
+                      onClick={() => navigate(`/admin/permohonan/${row.original.id}`)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="space-y-3 p-3 sm:hidden">
+              {table.getRowModel().rows.map((row) => {
+                const request = row.original
+                return (
+                  <article
                     key={row.id}
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/admin/permohonan/${row.original.id}`)}
+                    className="rounded-xl border bg-background p-4 shadow-xs"
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-mono text-xs font-semibold text-primary">
+                          {shortReference(request.id)}
+                        </p>
+                        <h2 className="mt-1 truncate text-sm font-semibold">
+                          {request.guru?.nama_guru ?? '-'}
+                        </h2>
+                      </div>
+                      <StatusPermohonanBadge status={request.status} />
+                    </div>
+                    <dl className="mt-3 grid grid-cols-2 gap-3 border-t pt-3 text-xs">
+                      <div>
+                        <dt className="text-muted-foreground">Tarikh pinjaman</dt>
+                        <dd className="mt-0.5 font-medium">{formatDateStringKL(request.tarikh_pinjaman)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Tarikh pulangan</dt>
+                        <dd className="mt-0.5 font-medium">
+                          {formatDateStringKL(request.tarikh_pemulangan_dijangka)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Peralatan</dt>
+                        <dd className="mt-0.5 font-medium">{request.item_count ?? 0} unit</dd>
+                      </div>
+                    </dl>
+                    <Button
+                      variant="outline"
+                      className="mt-4 min-h-11 w-full"
+                      onClick={() => navigate(`/admin/permohonan/${request.id}`)}
+                    >
+                      <Eye className="size-4" />
+                      Lihat permohonan
+                    </Button>
+                  </article>
+                )
+              })}
+            </div>
 
             <div className="flex items-center justify-between gap-3 border-t px-4 py-3">
               <p className="text-xs text-muted-foreground">
@@ -234,6 +285,7 @@ export function PermohonanPage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="min-h-11 sm:min-h-7"
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -243,6 +295,7 @@ export function PermohonanPage() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="min-h-11 sm:min-h-7"
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
                 >

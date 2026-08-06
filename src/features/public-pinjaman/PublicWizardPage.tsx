@@ -137,14 +137,14 @@ export function PublicWizardPage() {
         })}
       </ol>
 
-       <div className="rounded-2xl border bg-card p-5 shadow-md sm:p-7">
+      <div className="rounded-2xl border bg-card p-4 shadow-md sm:p-7">
         {step === 1 && <Step1Tarikh />}
         {step === 2 && <Step2Peralatan />}
         {step === 3 && <Step3Butiran />}
         {step === 4 && <Step4Semakan />}
 
-        <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
-          <div className="flex items-center gap-2">
+        <div className="mt-7 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
             <Button
               type="button"
               variant="outline"
@@ -155,7 +155,7 @@ export function PublicWizardPage() {
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button type="button" variant="ghost" className="text-muted-foreground hover:text-destructive">
+              <Button type="button" variant="ghost" className="min-h-11 text-muted-foreground hover:text-destructive sm:min-h-0">
                   <RotateCcw className="size-4" />
                   Mula Semula
                 </Button>
@@ -176,11 +176,11 @@ export function PublicWizardPage() {
             </AlertDialog>
           </div>
           {step < 4 ? (
-            <Button type="button" onClick={() => setStep(step + 1)} disabled={!canProceed}>
+            <Button type="button" className="w-full sm:w-auto" onClick={() => setStep(step + 1)} disabled={!canProceed}>
               Seterusnya
             </Button>
           ) : (
-            <Button type="button" onClick={handleSubmit} disabled={submitting || !canProceed}>
+            <Button type="button" className="w-full sm:w-auto" onClick={handleSubmit} disabled={submitting || !canProceed}>
               {submitting ? 'Menghantar...' : 'Hantar Permohonan'}
             </Button>
           )}
